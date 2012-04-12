@@ -2,7 +2,6 @@ package scanner;
 
 import java.util.*;
 
-
 public class Parser {
 
 	public static void main(String argv[]) {
