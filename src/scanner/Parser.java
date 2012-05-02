@@ -79,7 +79,7 @@ public class Parser {
 	public static void insymbol() {
 		try {
 			while ((nextSym = scanner.yylex()) != null && nextSym.id().getValue() == BLANK.getValue()){}
-			System.out.println(spaces + "insymbol: " + nextSym);
+//			System.out.println(spaces + "insymbol: " + nextSym);
 		} catch (java.io.FileNotFoundException e) {
 			System.out.println("File not found : \"" + inFile + "\"");
 		} catch (java.io.IOException e) {
