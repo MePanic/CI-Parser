@@ -1,0 +1,42 @@
+MODULE Ultimate;
+CONST ko = -3+read;
+VAR f,k,d : ARRAY[vier] OF ARRAY[0] OF bonbon;
+PROCEDURE machtwas();
+	BEGIN 
+		abra .bla[-8][fu+fa+fara].blabla := 11=42; 
+		IF 9 THEN PRINT expr
+			ELSIF 10 THEN 
+				PRINT 4#'rrring'*('tadaa'/ab.zu[da]); 
+				PRINT stern
+			ELSE 
+				REPEAT 
+					PRINT rep 
+				UNTIL z>2
+		END; 
+		PRINT 'Hallo Welt!' 
+	END gib
+BEGIN
+WHILE ich='nett' 
+	DO PRINT 'seeehr nett'
+END; 
+machtwas()
+END fenja.
+
+MODULE Ultimate2;
+TYPE dinge = RECORD blau,rot,gelb : farben; maus:tier; END;
+VAR keks : ARRAY[42] OF RECORD END;
+PROCEDURE machtwasanderes(VAR a:buchst); 
+	VAR infunc: funk; 
+	PROCEDURE tut(VAR hui,buh: gespenst; marvin:roboter); 
+		CONST stanz = l>=(a.to*z[f<s]);
+		BEGIN 
+			REPEAT proc(i=1,z.a[8],'lalala')
+			UNTIL 'schokolade' 
+		END so; 
+	BEGIN 
+		blub := gabel 
+	END hase
+BEGIN
+IF -sonne THEN f := gut; PRINT f END; 
+IF tuch THEN ELSE END
+END d.

@@ -1,0 +1,12 @@
+module m;
+
+var i : integer;
+a : array [10] of integer;
+
+begin
+i := 3;
+a[i] := 99;
+Print a[2+1];
+if i = 1 then i := 2; end;
+if i = 3 then Print i end;
+end m.

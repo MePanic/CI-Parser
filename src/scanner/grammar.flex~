@@ -39,7 +39,6 @@ BLANK  =	[ \t\n\r]
 "["					{ return new Token(LBRAC, yytext(), yyline, yycolumn); }
 "]"					{ return new Token(RBRAC, yytext(), yyline, yycolumn); }
 ";"					{ return new Token(SEMICOLON, yytext(), yyline, yycolumn); }
-"'"					{ return new Token(QUOT, yytext(), yyline, yycolumn); }
 [oO][fF]				{ return new Token(OF, yytext(), yyline, yycolumn); }
 [tT][hH][eE][nN]			{ return new Token(THEN, yytext(), yyline, yycolumn); }
 [dD][oO]				{ return new Token(DO, yytext(), yyline, yycolumn); }

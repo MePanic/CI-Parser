@@ -1,0 +1,11 @@
+* + - / :=
+= # < <= > >= . , : ( ) [ ] ;
+OF THEN DO PRINT READ
+END ELSE ELSIF IF WHILE REPEAT UNTIL
+ARRAY RECORD CONST TYPE
+VAR PROCEDURE BEGIN MODULE
+
+213
+ichbineinidentifier
+
+Fehler > "
