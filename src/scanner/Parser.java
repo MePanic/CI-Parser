@@ -114,6 +114,7 @@ public class Parser {
 	private static boolean isAssign(){return( nextSym.id() == ASSIGN);}
 	private static boolean isSemicolon(){return( nextSym.id() == SEMICOLON);}
 	private static boolean isColon(){return(nextSym.id() == COLON);}
+	private static boolean isError(){return(nextSym.id() == ERROR);}
 	
 	private static boolean isRead(){return( nextSym.id() == READ);}
 	private static boolean isIf(){return( nextSym.id() == IF);}
@@ -958,9 +959,6 @@ public class Parser {
 		}else if(isInteger()){
 			printNextsymbol();
 			insymbol();
-		}else if(isString()){
-			printNextsymbol();
-			insymbol();
 		}else if(isRead()){
 			read();
 		}else if(isLpar()){
@@ -976,6 +974,22 @@ public class Parser {
 				}
 			}else{
 				error("Ident Selector, Integer, String, 'read' or '(' expected");
+			}
+		}else if(isString()){
+			printNextsymbol();
+			insymbol();
+			if(isIdent() || isInteger() || isError()){
+				while(isIdent() || isInteger() || isError()){
+				printNextsymbol();
+				insymbol();}
+				if(isString()){
+					printNextsymbol();
+					insymbol();
+				} else {
+					error("' ' ' expected");
+				}
+			} else {
+				error("Ident expected");
 			}
 		}else{
 			error("Ident Selector, Integer, String, READ or '(' expected");
@@ -1006,9 +1020,10 @@ public class Parser {
 		if(isString()){
 			printNextsymbol();
 			insymbol();
-			if(isIdent()){
+			if(isIdent() || isInteger() || isError()){
+				while(isIdent() || isInteger() || isError()){
 				printNextsymbol();
-				insymbol();
+				insymbol();}
 				if(isString()){
 					printNextsymbol();
 					insymbol();
