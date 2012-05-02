@@ -1121,7 +1121,6 @@ public class Parser {
 	static void program(){
 		indent();
 		while(nextSym != null){
-	          System.out.println("------------------------" + nextSym);
 			if(isModule()){
 				module();
 			}else if(isDeclaration()){
