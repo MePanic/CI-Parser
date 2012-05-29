@@ -2,6 +2,7 @@ package node;
 
 import java.io.Serializable;
 import scanner.Parser;
+import descr.*;
 
 public abstract class AbstractNode implements Serializable {
 
@@ -13,8 +14,16 @@ public abstract class AbstractNode implements Serializable {
 		line = Parser.getLine();
 		column = Parser.getColumn();
 	}
+	
+//	public abstract String name();
 
 	public abstract String toString(int indent);
+	
+	public abstract AbstractDescr compile(SymbolTable sm);
+	public abstract AbstractDescr compile(SymbolTable sm, AbstractNode type);
+	
+	public abstract String name();
+	public abstract int getVal();
 	
 	protected String toString(int indent, String string) {
         StringBuilder sb = new StringBuilder();

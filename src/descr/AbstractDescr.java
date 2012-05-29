@@ -11,6 +11,8 @@ public abstract class AbstractDescr implements Serializable {
 		this.size = 0;
 		// this.level = CodeGen.level;
 	}
+	
+	public abstract int size();
 
 	public int getLevel() {
 		return level;

@@ -2,6 +2,9 @@ package node;
 
 import java.util.List;
 
+import descr.AbstractDescr;
+import descr.SymbolTable;
+
 public class ActualParametersNode extends AbstractNode {
 
 	private static final long serialVersionUID = 1L;
@@ -21,5 +24,11 @@ public class ActualParametersNode extends AbstractNode {
         	sb.append(expressions.get(i).toString(indent));
         }
         return sb.toString();
+	}
+
+	@Override
+	public AbstractDescr compile(SymbolTable sm) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

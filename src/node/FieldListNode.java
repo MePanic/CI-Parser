@@ -1,5 +1,8 @@
 package node;
 
+import descr.AbstractDescr;
+import descr.SymbolTable;
+
 public class FieldListNode extends AbstractNode {
 
 	private static final long serialVersionUID = 1L;
@@ -24,5 +27,11 @@ public class FieldListNode extends AbstractNode {
 //			System.out.println("type " + (type.line+1) + " - " + (type.column+1));
 			sb.append(type.toString(indent+1));
 		return sb.toString();
+	}
+
+	@Override
+	public AbstractDescr compile(SymbolTable sm) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

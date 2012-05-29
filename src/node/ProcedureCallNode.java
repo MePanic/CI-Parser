@@ -1,5 +1,8 @@
 package node;
 
+import descr.AbstractDescr;
+import descr.SymbolTable;
+
 public class ProcedureCallNode extends AbstractNode {
 
 	private static final long serialVersionUID = 1L;
@@ -22,5 +25,11 @@ public class ProcedureCallNode extends AbstractNode {
         if (actualParameters != null)
         	sb.append(actualParameters.toString(indent));
         return sb.toString();
+	}
+
+	@Override
+	public AbstractDescr compile(SymbolTable sm) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

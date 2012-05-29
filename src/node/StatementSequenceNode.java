@@ -2,6 +2,9 @@ package node;
 
 import java.util.List;
 
+import descr.AbstractDescr;
+import descr.SymbolTable;
+
 public class StatementSequenceNode extends AbstractNode {
 
 	private static final long serialVersionUID = 1L;
@@ -22,5 +25,14 @@ public class StatementSequenceNode extends AbstractNode {
         		sb.append(statements.get(i).toString(indent));
         }
         return sb.toString();
+	}
+
+	@Override
+	public AbstractDescr compile(SymbolTable sm) {
+        for (int i = 0; i < statements.size(); i++){
+        	if (statements.get(i) != null)
+        		statements.get(i).compile(sm);
+        }
+		return null;
 	}
 }

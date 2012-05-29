@@ -2,6 +2,9 @@ package node;
 
 import java.util.List;
 
+import descr.AbstractDescr;
+import descr.SymbolTable;
+
 public class DeclarationsNode extends AbstractNode {
 
 	private static final long serialVersionUID = 1L;
@@ -36,5 +39,22 @@ public class DeclarationsNode extends AbstractNode {
 			sb.append(procedures.get(i).toString(indent));
 		}
 		return sb.toString();
+	}
+
+	@Override
+	public AbstractDescr compile(SymbolTable sm) {
+		for (int i = 0; i < consts.size(); i++) {
+			consts.get(i).compile(sm);
+		}
+		for (int i = 0; i < types.size(); i++) {
+			types.get(i).compile(sm);
+		}
+		for (int i = 0; i < vars.size(); i++) {
+			vars.get(i).compile(sm);
+		}
+		for (int i = 0; i < procedures.size(); i++) {
+			procedures.get(i).compile(sm);
+		}
+		return null;
 	}
 }

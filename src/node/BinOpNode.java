@@ -1,5 +1,8 @@
 package node;
 
+import descr.AbstractDescr;
+import descr.SymbolTable;
+
 public class BinOpNode extends AbstractNode {
 
 	private static final long serialVersionUID = 1L;
@@ -23,8 +26,15 @@ public class BinOpNode extends AbstractNode {
         StringBuilder sb = new StringBuilder();
     	sb.append(toString(indent, "BinOpNode(" + op + ")\n"));
     	indent++;
+    	System.out.println(right.line);
     	sb.append(left.toString(indent));
         sb.append(right.toString(++indent));
         return sb.toString();
     }
+
+	@Override
+	public AbstractDescr compile(SymbolTable sm) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

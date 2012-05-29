@@ -1,5 +1,8 @@
 package node;
 
+import descr.AbstractDescr;
+import descr.SymbolTable;
+
 public class NegationNode extends AbstractNode {
 
 	private static final long serialVersionUID = 1L;
@@ -18,4 +21,10 @@ public class NegationNode extends AbstractNode {
         sb.append(node.toString(indent));
         return sb.toString();
     }
+
+	@Override
+	public AbstractDescr compile(SymbolTable sm) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

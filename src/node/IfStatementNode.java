@@ -1,5 +1,8 @@
 package node;
 
+import descr.AbstractDescr;
+import descr.SymbolTable;
+
 public class IfStatementNode extends AbstractNode {
 
 	private static final long serialVersionUID = 1L;
@@ -30,5 +33,11 @@ public class IfStatementNode extends AbstractNode {
         if (statementSequence2 != null)
         	sb.append(statementSequence2.toString(indent));
         return sb.toString();
+	}
+
+	@Override
+	public AbstractDescr compile(SymbolTable sm) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

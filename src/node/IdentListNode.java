@@ -2,6 +2,9 @@ package node;
 
 import java.util.List;
 
+import descr.AbstractDescr;
+import descr.SymbolTable;
+
 public class IdentListNode extends AbstractNode {
 
 	private static final long serialVersionUID = 1L;
@@ -22,4 +25,14 @@ public class IdentListNode extends AbstractNode {
         }
         return sb.toString();
     }
+    
+    @Override
+	public AbstractDescr compile(SymbolTable sm, AbstractNode type) {
+
+    	for(AbstractNode node : idents){
+//    		System.out.println(type);
+    		sm.declare(node.name(),	type.compile(sm));
+    	}
+		return null;
+	}
 }

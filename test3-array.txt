@@ -14,9 +14,9 @@ begin
  b := a;
  Print a[9];
  Print b[9];
- d[4][2*2] := 99;
+ d[4][2] := 99;
  i := 1;
- e[i][2*i] := d[5-1][4];
+ e[i][i] := d[5][4];
  Print e[1][2];
  Print 99;
 end m4.   

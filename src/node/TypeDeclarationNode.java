@@ -1,5 +1,8 @@
 package node;
 
+import descr.AbstractDescr;
+import descr.SymbolTable;
+
 public class TypeDeclarationNode extends AbstractNode {
 
 	private static final long serialVersionUID = 1L;
@@ -22,5 +25,11 @@ public class TypeDeclarationNode extends AbstractNode {
         if (type != null)
         	sb.append(type.toString(indent));
         return sb.toString();
+	}
+
+	@Override
+	public AbstractDescr compile(SymbolTable sm) {
+		sm.declare(ident.name(), type.compile(sm));
+		return null;
 	}
 }

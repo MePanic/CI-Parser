@@ -5,6 +5,8 @@ import static scanner.ID.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import descr.SymbolTable;
+
 import node.*;
 import node.BinOpNode.BinOp;
 
@@ -13,6 +15,8 @@ import scanner.Token;
 
 public class Parser {
 
+	StringBuilder pars;
+	
 	// Main
 
 	@SuppressWarnings("hiding")
@@ -37,6 +41,33 @@ public class Parser {
 				}
 			}
 		}
+	}
+	
+	public Parser(String argv[]){
+		if (argv.length == 0) {
+			System.out.println("Usage : java Scanner <inputfile>");
+		} else {
+			for (int i = 0; i < argv.length; i++) {
+				try {
+					scanner = new Scanner(new java.io.FileReader(argv[i]));
+					insymbol();
+					pars = program();
+				} catch (java.io.FileNotFoundException e) {
+					System.out.println("File not found : \"" + argv[i] + "\"");
+				} catch (java.io.IOException e) {
+					System.out.println("IO error scanning file \"" + argv[i]
+							+ "\"");
+					System.out.println(e);
+				} catch (Exception e) {
+					System.out.println("Unexpected exception:");
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+	
+	public StringBuilder pars(){
+		return pars;
 	}
 
 	static Token nextSym = null;
@@ -65,15 +96,15 @@ public class Parser {
 	}
 
 	public static void printNextSymbol() {
-		System.out.println(spaces + " -- " + nextSym.id() + " "); /**/
+//		System.out.println(spaces + " -- " + nextSym.id() + " "); /**/
 	}
 
 	public static void printThisSymbol(Token t) {
-		System.out.println(spaces + " -- " + t.id() + " "); /**/
+//		System.out.println(spaces + " -- " + t.id() + " "); /**/
 	}
 
 	public static void printFunction(String name) {
-		System.out.println(spaces + name);/* +": " + nextsymbol);/* */
+//		System.out.println(spaces + name);/* +": " + nextsymbol);/* */
 	}
 
 	public static String place() {
@@ -293,17 +324,22 @@ public class Parser {
 
 	// Parserroutinen
 
-	static AbstractNode program() {
+	static StringBuilder program() {
+		StringBuilder res = new StringBuilder();
 		printFunction("Program");
 		indent();
 		while (nextSym != null) {
 			if (isModule()) {
-				System.out.println(module().toString(0));
+				AbstractNode mod = module();
+				mod.compile(new SymbolTable());
+				res.append(mod.toString(0));
+//				System.out.println(module().toString(0));
 			} else
 				error("unknown Code");
 		}
 		unindent();
-		return null;
+//		System.out.println(res);
+		return res;
 	}
 
 	// Module = �MODULE� ident �;� Declarations
@@ -1024,8 +1060,11 @@ public class Parser {
 		printFunction("Statement");
 		indent();
 		AbstractNode statement = null;
-		if (isIdent()) {
+		if (nextSym.text().toLowerCase().equals("repeat")) {
+			statement = repeatStatement();
+		} else if (isIdent()) {
 			Token save = nextSym;
+//			System.out.println(nextSym.text());
 			insymbol();
 			if (isDot() || isLbrac() || isAssign()) {
 				statement = assignment(save);
@@ -1044,9 +1083,7 @@ public class Parser {
 			// } else error("Expression expected");
 		} else if (isWhile()) {
 			statement = whileStatement();
-		} else if (isRepeat()) {
-			statement = repeatStatement();
-		}
+		}  
 		unindent();
 		return statement;
 	}
@@ -1132,8 +1169,10 @@ public class Parser {
 			if (isExpression()) {
 				expression = expression();
 				if (isThen()) {
+					insymbol();
 					if (isStatement()) {
 						statementSequence = statementSequence();
+//						System.out.println(nextSym.text());
 						ifStatementNode = new IfStatementNode(expression,
 								statementSequence, isElseIf() ? ifStatement_()
 										: null, null);
@@ -1189,7 +1228,7 @@ public class Parser {
 		indent();
 		AbstractNode repeatStatement = null;
 		AbstractNode statementSequence = null;
-		if (isRepeat()) {
+		if (nextSym.text().toLowerCase().equals("repeat")) {
 			printNextSymbol();
 			insymbol();
 			if (isStatement()) {
