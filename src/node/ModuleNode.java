@@ -21,6 +21,7 @@ public class ModuleNode extends AbstractNode {
 		indent++;
         if (ident != null)
 			sb.append(ident.toString(indent));
+        indent ++;
 		if (declaration != null)
 			sb.append(declaration.toString(indent));
 		if (statementSequence != null)

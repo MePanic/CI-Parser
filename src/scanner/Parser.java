@@ -12,9 +12,9 @@ import scanner.Scanner;
 import scanner.Token;
 
 public class Parser {
-	
+
 	// Main
-	
+
 	@SuppressWarnings("hiding")
 	public static void main(String argv[]) {
 		if (argv.length == 0) {
@@ -26,9 +26,10 @@ public class Parser {
 					insymbol();
 					program();
 				} catch (java.io.FileNotFoundException e) {
-					System.out.println("File not found : \""+argv[i]+"\"");
+					System.out.println("File not found : \"" + argv[i] + "\"");
 				} catch (java.io.IOException e) {
-					System.out.println("IO error scanning file \""+argv[i]+"\"");
+					System.out.println("IO error scanning file \"" + argv[i]
+							+ "\"");
 					System.out.println(e);
 				} catch (Exception e) {
 					System.out.println("Unexpected exception:");
@@ -37,35 +38,59 @@ public class Parser {
 			}
 		}
 	}
-	
+
 	static Token nextSym = null;
 	static String inFile;
 	static Scanner scanner = null;
 	static String spaces = "";
-	
+
 	// Getter
-	
-	public static int getLine() { return nextSym.line(); }
-	public static int getColumn() { return nextSym.column(); }
-	
+
+	public static int getLine() {
+		return nextSym.line();
+	}
+
+	public static int getColumn() {
+		return nextSym.column();
+	}
+
 	// Hilfsroutinen
-	
-	public static void indent() { spaces = spaces + "  "; }
-	public static void unindent() { spaces = spaces.substring(2); }
-	public static void printNextSymbol() { /*System.out.println(spaces + " -- " + nextSym.id() + " "); */}
-	public static void printThisSymbol(Token t) {/* System.out.println(spaces + " -- " + t.id() + " "); */}
-	public static void printFunction(String name) { /*System.out.println(spaces + name/* +": " + nextsymbol);*/ }
-	public static String place() { return("l: " + (nextSym.line() + 1) + ", c:" + (nextSym.column() + 1)); }
-	
+
+	public static void indent() {
+		spaces = spaces + "  ";
+	}
+
+	public static void unindent() {
+		spaces = spaces.substring(2);
+	}
+
+	public static void printNextSymbol() {
+		System.out.println(spaces + " -- " + nextSym.id() + " "); /**/
+	}
+
+	public static void printThisSymbol(Token t) {
+		System.out.println(spaces + " -- " + t.id() + " "); /**/
+	}
+
+	public static void printFunction(String name) {
+		System.out.println(spaces + name);/* +": " + nextsymbol);/* */
+	}
+
+	public static String place() {
+		return ("l: " + (nextSym.line() + 1) + ", c:" + (nextSym.column() + 1));
+	}
+
 	public static void error(String str) {
 		System.out.println("==> Error: " + str + " " + place());
 		System.exit(0);
 	}
-	
+
 	public static void insymbol() {
 		try {
-			while ((nextSym = scanner.yylex()) != null && nextSym.id().getValue() == BLANK.getValue()) {}
-//			System.out.println(spaces + "insymbol: " + nextSym);
+			while ((nextSym = scanner.yylex()) != null
+					&& nextSym.id().getValue() == BLANK.getValue()) {
+			}
+			// System.out.println(spaces + "insymbol: " + nextSym);
 		} catch (java.io.FileNotFoundException e) {
 			System.out.println("File not found : \"" + inFile + "\"");
 		} catch (java.io.IOException e) {
@@ -76,71 +101,211 @@ public class Parser {
 			e.printStackTrace();
 		}
 	}
-	
+
 	// Abfragehilfe
-	
-	private static boolean isString() { return (nextSym.id() == QUOT); }
-	private static boolean isInteger() { return (nextSym.id() == DIGIT); }
-	private static boolean isIdent() { return (nextSym.id() == ID); }
-	private static boolean isLpar() { return (nextSym.id() == LPAR); }
-	private static boolean isRpar() { return (nextSym.id() == RPAR); }
-	private static boolean isLbrac() { return (nextSym.id() == LBRAC); }
-	private static boolean isRbrac() { return (nextSym.id() == RBRAC); }
-	private static boolean isPlus() { return (nextSym.id() == PLUS); }
-	private static boolean isMinus() { return (nextSym.id() == MINUS); }
-	private static boolean isMul() { return (nextSym.id() == MUL); }
-	private static boolean isDiv() { return (nextSym.id() == DIV); }
-	private static boolean isEq() { return (nextSym.id() == EQ); }
-	private static boolean isNeq() { return (nextSym.id() == NEQ); }
-	private static boolean isLo() { return (nextSym.id() == LO); }
-	private static boolean isHi() { return (nextSym.id() == HI); }
-	private static boolean isLoEq() { return (nextSym.id() == LOEQ); }
-	private static boolean isHiEq() { return (nextSym.id() == HIEQ); }
-	private static boolean isDot() { return (nextSym.id() == DOT); }
-	private static boolean isComma() { return (nextSym.id() == COMMA); }
-	private static boolean isAssign() { return (nextSym.id() == ASSIGN); }
-	private static boolean isSemicolon() { return (nextSym.id() == SEMICOLON); }
-	private static boolean isColon() { return (nextSym.id() == COLON); }
-	private static boolean isError() { return (nextSym.id() == ERROR); }
-	private static boolean isRead() { return (nextSym.id() == READ); }
-	private static boolean isIf() { return (nextSym.id() == IF); }
-	private static boolean isThen() { return (nextSym.id() == THEN); }
-	private static boolean isElse() { return (nextSym.id() == ELSE); }
-	private static boolean isElseIf() { return (nextSym.id() == ELSIF); }
-	private static boolean isWhile() { return (nextSym.id() == WHILE); }
-	private static boolean isDo() { return (nextSym.id() == DO); }
-	private static boolean isEnd() { return (nextSym.id() == END); }
-	private static boolean isRepeat() { return (nextSym.id() == REPEAT); }
-	private static boolean isUntil() { return (nextSym.id() == UNTIL); }
-	private static boolean isPrint() { return (nextSym.id() == PRINT); }
-	private static boolean isModule() { return (nextSym.id() == MODULE); }
-	private static boolean isBegin() { return (nextSym.id() == BEGIN); }
-	private static boolean isConst() { return (nextSym.id() == CONST); }
-	private static boolean isType() { return (nextSym.id() == TYPE); }
-	private static boolean isVar() { return (nextSym.id() == VAR); }
-	private static boolean isProcedure() { return (nextSym.id() == PROCEDURE); }
-	private static boolean isArray() { return (nextSym.id() == ARRAY); }
-	private static boolean isOf() { return (nextSym.id() == OF); }
-	private static boolean isRecord() { return (nextSym.id() == RECORD); }
-	private static boolean isFactor() { return (isIdent() || isInteger() || isString() || isRead() || isLpar()); }
-	private static boolean isExpression() { return (isMinus() || isFactor()); }
-	private static boolean isStatement() { return (isIdent() || isIf() || isPrint() || isWhile() || isRepeat()); }
-	//private static boolean isDeclaration() { return (isConst() || isType() || isVar() || isProcedure()); }
-	
+
+	private static boolean isString() {
+		return (nextSym.id() == QUOT);
+	}
+
+	private static boolean isInteger() {
+		return (nextSym.id() == DIGIT);
+	}
+
+	private static boolean isIdent() {
+		return (nextSym.id() == ID);
+	}
+
+	private static boolean isLpar() {
+		return (nextSym.id() == LPAR);
+	}
+
+	private static boolean isRpar() {
+		return (nextSym.id() == RPAR);
+	}
+
+	private static boolean isLbrac() {
+		return (nextSym.id() == LBRAC);
+	}
+
+	private static boolean isRbrac() {
+		return (nextSym.id() == RBRAC);
+	}
+
+	private static boolean isPlus() {
+		return (nextSym.id() == PLUS);
+	}
+
+	private static boolean isMinus() {
+		return (nextSym.id() == MINUS);
+	}
+
+	private static boolean isMul() {
+		return (nextSym.id() == MUL);
+	}
+
+	private static boolean isDiv() {
+		return (nextSym.id() == DIV);
+	}
+
+	private static boolean isEq() {
+		return (nextSym.id() == EQ);
+	}
+
+	private static boolean isNeq() {
+		return (nextSym.id() == NEQ);
+	}
+
+	private static boolean isLo() {
+		return (nextSym.id() == LO);
+	}
+
+	private static boolean isHi() {
+		return (nextSym.id() == HI);
+	}
+
+	private static boolean isLoEq() {
+		return (nextSym.id() == LOEQ);
+	}
+
+	private static boolean isHiEq() {
+		return (nextSym.id() == HIEQ);
+	}
+
+	private static boolean isDot() {
+		return (nextSym.id() == DOT);
+	}
+
+	private static boolean isComma() {
+		return (nextSym.id() == COMMA);
+	}
+
+	private static boolean isAssign() {
+		return (nextSym.id() == ASSIGN);
+	}
+
+	private static boolean isSemicolon() {
+		return (nextSym.id() == SEMICOLON);
+	}
+
+	private static boolean isColon() {
+		return (nextSym.id() == COLON);
+	}
+
+	private static boolean isError() {
+		return (nextSym.id() == ERROR);
+	}
+
+	private static boolean isRead() {
+		return (nextSym.id() == READ);
+	}
+
+	private static boolean isIf() {
+		return (nextSym.id() == IF);
+	}
+
+	private static boolean isThen() {
+		return (nextSym.id() == THEN);
+	}
+
+	private static boolean isElse() {
+		return (nextSym.id() == ELSE);
+	}
+
+	private static boolean isElseIf() {
+		return (nextSym.id() == ELSIF);
+	}
+
+	private static boolean isWhile() {
+		return (nextSym.id() == WHILE);
+	}
+
+	private static boolean isDo() {
+		return (nextSym.id() == DO);
+	}
+
+	private static boolean isEnd() {
+		return (nextSym.id() == END);
+	}
+
+	private static boolean isRepeat() {
+		return (nextSym.id() == REPEAT);
+	}
+
+	private static boolean isUntil() {
+		return (nextSym.id() == UNTIL);
+	}
+
+	private static boolean isPrint() {
+		return (nextSym.id() == PRINT);
+	}
+
+	private static boolean isModule() {
+		return (nextSym.id() == MODULE);
+	}
+
+	private static boolean isBegin() {
+		return (nextSym.id() == BEGIN);
+	}
+
+	private static boolean isConst() {
+		return (nextSym.id() == CONST);
+	}
+
+	private static boolean isType() {
+		return (nextSym.id() == TYPE);
+	}
+
+	private static boolean isVar() {
+		return (nextSym.id() == VAR);
+	}
+
+	private static boolean isProcedure() {
+		return (nextSym.id() == PROCEDURE);
+	}
+
+	private static boolean isArray() {
+		return (nextSym.id() == ARRAY);
+	}
+
+	private static boolean isOf() {
+		return (nextSym.id() == OF);
+	}
+
+	private static boolean isRecord() {
+		return (nextSym.id() == RECORD);
+	}
+
+	private static boolean isFactor() {
+		return (isIdent() || isInteger() || isString() || isRead() || isLpar());
+	}
+
+	private static boolean isExpression() {
+		return (isMinus() || isFactor());
+	}
+
+	private static boolean isStatement() {
+		return (isIdent() || isIf() || isPrint() || isWhile() || isRepeat());
+	}
+
+	// private static boolean isDeclaration() { return (isConst() || isType() ||
+	// isVar() || isProcedure()); }
+
 	// Parserroutinen
-	
+
 	static AbstractNode program() {
 		printFunction("Program");
 		indent();
 		while (nextSym != null) {
 			if (isModule()) {
 				System.out.println(module().toString(0));
-			} else error("unknown Code");
+			} else
+				error("unknown Code");
 		}
 		unindent();
 		return null;
 	}
-	
+
 	// Module = �MODULE� ident �;� Declarations
 	// �BEGIN� StatementSequence
 	// �END� ident �
@@ -150,7 +315,7 @@ public class Parser {
 		AbstractNode module = null;
 		IdentNode ident = null;
 		AbstractNode declarations = null;
-		AbstractNode statementSequence = null;		
+		AbstractNode statementSequence = null;
 		if (isModule()) {
 			printNextSymbol();
 			insymbol();
@@ -171,21 +336,30 @@ public class Parser {
 								printNextSymbol();
 								insymbol();
 								if (isDot()) {
-									module = new ModuleNode(ident, declarations, statementSequence);
+									module = new ModuleNode(ident,
+											declarations, statementSequence);
 									printNextSymbol();
 									insymbol();
-								} else error("'.' expected");
-							} else error("Ident expected");
-						} else error("'end' expected");
-					} else error("'begin' expected");
-				} else error("';' expected");
-			} else error("Ident expected");
-		} else error("'module' expected");
+								} else
+									error("'.' expected");
+							} else
+								error("Ident expected");
+						} else
+							error("'end' expected");
+					} else
+						error("'begin' expected");
+				} else
+					error("';' expected");
+			} else
+				error("Ident expected");
+		} else
+			error("'module' expected");
 		unindent();
 		return module;
 	}
-	
-	// Declarations = [�CONST� ident �=� Expression �;� {ident �=� Expression �;�}]
+
+	// Declarations = [�CONST� ident �=� Expression �;� {ident �=� Expression
+	// �;�}]
 	// [�TYPE� ident �=� Type �;� {ident �=� Type �;�}]
 	// [�VAR� IdentList �:� Type �;� {IdentList �:� Type �;�}]
 	// {ProcedureDeclaration �;�}
@@ -193,12 +367,12 @@ public class Parser {
 		printFunction("Declarations");
 		indent();
 		List<ConstDeclarationNode> consts = new ArrayList<ConstDeclarationNode>();
-	    List<TypeDeclarationNode> types = new ArrayList<TypeDeclarationNode>();
-	    List<VarDeclarationNode> vars = new ArrayList<VarDeclarationNode>();
-	    List<AbstractNode> procedures = new ArrayList<AbstractNode>();
-	    AbstractNode arg1;
-	    AbstractNode arg2;
-		
+		List<TypeDeclarationNode> types = new ArrayList<TypeDeclarationNode>();
+		List<VarDeclarationNode> vars = new ArrayList<VarDeclarationNode>();
+		List<AbstractNode> procedures = new ArrayList<AbstractNode>();
+		AbstractNode arg1;
+		AbstractNode arg2;
+
 		// Const
 		if (isConst()) {
 			printNextSymbol();
@@ -215,13 +389,17 @@ public class Parser {
 								printNextSymbol();
 								insymbol();
 								consts.add(new ConstDeclarationNode(arg1, arg2));
-							} else error("';' expected");
-						} else error("Expression expected");
-					} else error("'=' expected");
+							} else
+								error("';' expected");
+						} else
+							error("Expression expected");
+					} else
+						error("'=' expected");
 				}
-			} else error("Ident expected");
+			} else
+				error("Ident expected");
 		}
-		
+
 		// Type
 		if (isType()) {
 			printNextSymbol();
@@ -238,13 +416,17 @@ public class Parser {
 								printNextSymbol();
 								insymbol();
 								types.add(new TypeDeclarationNode(arg1, arg2));
-							} else error("';' expected");
-						} else error("Expression expected");
-					} else error("'=' expected");
+							} else
+								error("';' expected");
+						} else
+							error("Expression expected");
+					} else
+						error("'=' expected");
 				}
-			} else error("Ident expected");
+			} else
+				error("Ident expected");
 		}
-		
+
 		// Var
 		if (isVar()) {
 			printNextSymbol();
@@ -261,26 +443,31 @@ public class Parser {
 								printNextSymbol();
 								insymbol();
 								vars.add(new VarDeclarationNode(arg1, arg2));
-							} else error("';' expected");
-						} else error("Type expected");
-					} else error("':' expected");
+							} else
+								error("';' expected");
+						} else
+							error("Type expected");
+					} else
+						error("':' expected");
 				}
-			} else error("IdentList expected");
+			} else
+				error("IdentList expected");
 		}
-		
+
 		// Procedure
 		while (isProcedure()) {
 			procedures.add(procedure());
 			if (isSemicolon()) {
 				printNextSymbol();
 				insymbol();
-			} else error("';' expected");
+			} else
+				error("';' expected");
 		}
-		
+
 		unindent();
 		return new DeclarationsNode(consts, types, vars, procedures);
 	}
-	
+
 	// Expression = SimpleExpression
 	// [(�=� | �#� | �<� | �<=� | �>� | �>=�) SimpleExpression].
 	static AbstractNode expression() {
@@ -290,47 +477,54 @@ public class Parser {
 		if (isEq()) {
 			printNextSymbol();
 			insymbol();
-			expression = new BinOpNode(BinOp.EQ_OP, expression, simpleExpression()); 
+			expression = new BinOpNode(BinOp.EQ_OP, expression,
+					simpleExpression());
 		} else if (isNeq()) {
 			printNextSymbol();
 			insymbol();
-			expression = new BinOpNode(BinOp.NEQ_OP, expression, simpleExpression()); 
+			expression = new BinOpNode(BinOp.NEQ_OP, expression,
+					simpleExpression());
 		} else if (isLo()) {
 			printNextSymbol();
 			insymbol();
-			expression = new BinOpNode(BinOp.LO_OP, expression, simpleExpression()); 
+			expression = new BinOpNode(BinOp.LO_OP, expression,
+					simpleExpression());
 		} else if (isHi()) {
 			printNextSymbol();
 			insymbol();
-			expression = new BinOpNode(BinOp.HI_OP, expression, simpleExpression()); 
+			expression = new BinOpNode(BinOp.HI_OP, expression,
+					simpleExpression());
 		} else if (isLoEq()) {
 			printNextSymbol();
 			insymbol();
-			expression = new BinOpNode(BinOp.LOEQ_OP, expression, simpleExpression()); 
+			expression = new BinOpNode(BinOp.LOEQ_OP, expression,
+					simpleExpression());
 		} else if (isHiEq()) {
 			printNextSymbol();
 			insymbol();
-			expression = new BinOpNode(BinOp.HIEQ_OP, expression, simpleExpression()); 
+			expression = new BinOpNode(BinOp.HIEQ_OP, expression,
+					simpleExpression());
 		}
 		unindent();
 		return expression;
 	}
-	
-	static AbstractNode print(){
+
+	static AbstractNode print() {
 		printFunction("Print");
 		indent();
 		AbstractNode print = null;
 		if (isPrint()) {
 			printNextSymbol();
 			insymbol();
-		} else error("'print' expected");
+		} else
+			error("'print' expected");
 		if (isExpression()) {
 			print = new PrintNode(expression());
 		}
 		unindent();
 		return print;
 	}
-	
+
 	// SimpleExpression = [�-�] Term
 	// {(�+� | �-�) Term}.
 	static AbstractNode simpleExpression() {
@@ -348,17 +542,20 @@ public class Parser {
 			if (isPlus()) {
 				printNextSymbol();
 				insymbol();
-				simpleExpression = new BinOpNode(BinOp.PLUS_OP, simpleExpression, term());
+				simpleExpression = new BinOpNode(BinOp.PLUS_OP,
+						simpleExpression, term());
 			} else if (isMinus()) {
 				printNextSymbol();
 				insymbol();
-				simpleExpression = new BinOpNode(BinOp.MINUS_OP, simpleExpression, term());
-			} else error("(�+� | �-�) expected");
+				simpleExpression = new BinOpNode(BinOp.MINUS_OP,
+						simpleExpression, term());
+			} else
+				error("(�+� | �-�) expected");
 		}
 		unindent();
 		return simpleExpression;
 	}
-	
+
 	// Term = Factor
 	// {(�*� | �/�) Factor}.
 	static AbstractNode term() {
@@ -374,12 +571,13 @@ public class Parser {
 				printNextSymbol();
 				insymbol();
 				term = new BinOpNode(BinOp.DIV_OP, term, factor());
-			} else error("(�*� | �/�) expected");
+			} else
+				error("(�*� | �/�) expected");
 		}
 		unindent();
 		return term;
 	}
-	
+
 	// Factor = Ident Selector | Integer | String | Read | �(� Expression �)�.
 	static AbstractNode factor() {
 		printFunction("Factor");
@@ -398,45 +596,87 @@ public class Parser {
 			factor = stringNode();
 		} else if (isRead()) {
 			factor = read();
-		} else if(isLpar()) {
+		} else if (isLpar()) {
 			printNextSymbol();
 			insymbol();
 			factor = expression();
 			if (isRpar()) {
 				printNextSymbol();
 				insymbol();
-			} else error("')' expected");
-		} else error("Ident Selector, Integer, String, READ or '(' expected");
+			} else
+				error("')' expected");
+		} else
+			error("Ident Selector, Integer, String, READ or '(' expected");
 		unindent();
 		return factor;
 	}
-	
+
 	// Selector = {�.� ident | �[� Expression �]�}.
-	static AbstractNode selector(IdentNode subject) {
+	// static AbstractNode selector(IdentNode subject) {
+	// printFunction("Selector");
+	// indent();
+	// AbstractNode selector = null;
+	// if (isDot() || isLbrac()) {
+	// while (isDot() || isLbrac()) {
+	// if (isDot()) {
+	// printNextSymbol();
+	// insymbol();
+	// selector = new RecordSelectorNode(subject, constIdent());
+	// } else if (isLbrac()) {
+	// printNextSymbol();
+	// insymbol();
+	// selector = new ArraySelectorNode(subject, indexExpression());
+	// if (isRbrac()) {
+	// printNextSymbol();
+	// insymbol();
+	// } else error("']' expected");
+	// }
+	// }
+	// } else error ("('.' | �[�) expected");
+	// unindent();
+	// return selector;
+	// }
+
+	static AbstractNode selector(AbstractNode subject) {
 		printFunction("Selector");
 		indent();
+
 		AbstractNode selector = null;
 		if (isDot() || isLbrac()) {
 			while (isDot() || isLbrac()) {
 				if (isDot()) {
 					printNextSymbol();
 					insymbol();
-					selector = new RecordSelectorNode(subject, constIdent());
+					if(isDot()){
+					selector = new RecordSelectorNode(selector(subject),
+							constIdent());
+					} else {
+						new RecordSelectorNode(subject, constIdent());
+					}
 				} else if (isLbrac()) {
 					printNextSymbol();
 					insymbol();
-					selector = new ArraySelectorNode(subject, indexExpression());
+					AbstractNode indExp = indexExpression();
+
 					if (isRbrac()) {
 						printNextSymbol();
 						insymbol();
-					} else error("']' expected");
+						if (isLbrac()) {
+							selector = new ArraySelectorNode(selector(subject),
+									indExp);
+						} else {
+							selector = new ArraySelectorNode(subject, indExp);
+						}
+					} else
+						error("']' expected");
 				}
 			}
-		} else error ("('.' | �[�) expected");
+		} else
+			error("('.' | �[�) expected");
 		unindent();
 		return selector;
 	}
-	
+
 	// Read = READ [Prompt].
 	static AbstractNode read() {
 		printFunction("Read");
@@ -445,14 +685,15 @@ public class Parser {
 		if (isRead()) {
 			printNextSymbol();
 			insymbol();
-		} else error("'read' expected");
+		} else
+			error("'read' expected");
 		if (isString()) {
 			read = prompt();
 		}
 		unindent();
 		return read;
 	}
-	
+
 	// Prompt = String.
 	static AbstractNode prompt() {
 		printFunction("Prompt");
@@ -464,7 +705,7 @@ public class Parser {
 		unindent();
 		return prompt;
 	}
-	
+
 	// Type = ident | ArrayType | RecordType.
 	static AbstractNode type() {
 		printFunction("Type");
@@ -476,11 +717,12 @@ public class Parser {
 			type = arrayType();
 		} else if (isRecord()) {
 			type = recordType();
-		} else error("Ident, ArrayType or RecordType expected");
+		} else
+			error("Ident, ArrayType or RecordType expected");
 		unindent();
 		return type;
 	}
-	
+
 	// ArrayType = �ARRAY� �[� IndexExpression �]� �OF� Type.
 	static AbstractNode arrayType() {
 		printFunction("ArrayType");
@@ -502,20 +744,27 @@ public class Parser {
 							printNextSymbol();
 							insymbol();
 							if (isIdent() || isArray() || isRecord()) {
-								arrayType = new ArrayTypeNode(indexExpression, type());
-							} else error("Type expected");
-						} else error("'of' expected");
-					} else error("']' expected");
-				} else error("IndexExpression expected");
-			} else error("'[' expected");
-		} else error("'array' expected");
+								arrayType = new ArrayTypeNode(indexExpression,
+										type());
+							} else
+								error("Type expected");
+						} else
+							error("'of' expected");
+					} else
+						error("']' expected");
+				} else
+					error("IndexExpression expected");
+			} else
+				error("'[' expected");
+		} else
+			error("'array' expected");
 		unindent();
 		return arrayType;
 	}
-	
+
 	// RecordType = �RECORD� FieldList
 	// {�;� FieldList} �END�.
-	static AbstractNode recordType(){
+	static AbstractNode recordType() {
 		printFunction("RecordType");
 		indent();
 		List<FieldListNode> fieldLists = new ArrayList<FieldListNode>();
@@ -531,12 +780,14 @@ public class Parser {
 			if (isEnd()) {
 				printNextSymbol();
 				insymbol();
-			} else error("'end' expected");
-		} else error("'record' expected");
+			} else
+				error("'end' expected");
+		} else
+			error("'record' expected");
 		unindent();
 		return new RecordTypeNode(fieldLists);
 	}
-	
+
 	// FieldList = [IdentList �:� Type].
 	static FieldListNode fieldList() {
 		printFunction("FieldList");
@@ -550,13 +801,15 @@ public class Parser {
 				insymbol();
 				if (isIdent() || isArray() || isRecord()) {
 					fieldList = new FieldListNode(identList, type());
-				} else error("Type expected");
-			} else error("':' expected");
+				} else
+					error("Type expected");
+			} else
+				error("':' expected");
 		}
 		unindent();
 		return fieldList;
 	}
-	
+
 	// IdentList = ident {�,� ident}.
 	static AbstractNode identList() {
 		printFunction("IdentList");
@@ -564,19 +817,22 @@ public class Parser {
 		List<IdentNode> idents = new ArrayList<IdentNode>();
 		if (isIdent()) {
 			idents.add(constIdent());
-		} else error("Ident expected");
+		} else
+			error("Ident expected");
 		while (isComma()) {
 			printNextSymbol();
 			insymbol();
 			if (isIdent()) {
 				idents.add(constIdent());
-			} else error("Ident expected");
+			} else
+				error("Ident expected");
 		}
 		unindent();
 		return new IdentListNode(idents);
 	}
-	
-	// Procedure = �PROCEDURE� ident �(� [FormalParameters] �)� �;� Declarations �BEGIN� StatementSequence �END� ident.
+
+	// Procedure = �PROCEDURE� ident �(� [FormalParameters] �)� �;� Declarations
+	// �BEGIN� StatementSequence �END� ident.
 	static ProcedureNode procedure() {
 		printFunction("Procedure");
 		indent();
@@ -612,14 +868,23 @@ public class Parser {
 								if (isIdent()) {
 									printNextSymbol();
 									insymbol();
-									procedure = new ProcedureNode(ident, formalParameters, declarations, statementSequence);
-								} else error("Ident expected");
-							} else error("'end' expected");
-						} else error("'begin' expected");
-					} else error("';' expected");
-				} else error("')' expected");
-			} else error("'(' expected");
-		} else error("'procedure' expected");
+									procedure = new ProcedureNode(ident,
+											formalParameters, declarations,
+											statementSequence);
+								} else
+									error("Ident expected");
+							} else
+								error("'end' expected");
+						} else
+							error("'begin' expected");
+					} else
+						error("';' expected");
+				} else
+					error("')' expected");
+			} else
+				error("'(' expected");
+		} else
+			error("'procedure' expected");
 		unindent();
 		return procedure;
 	}
@@ -631,18 +896,20 @@ public class Parser {
 		List<FpSectionNode> fpsections = new ArrayList<FpSectionNode>();
 		if (isVar() || isIdent()) {
 			fpsections.add(fpSection());
-		} else error("FPSection expected");
+		} else
+			error("FPSection expected");
 		while (isSemicolon()) {
 			printNextSymbol();
 			insymbol();
 			if (isVar() || isIdent()) {
 				fpsections.add(fpSection());
-			} else error("FPSection expected");
+			} else
+				error("FPSection expected");
 		}
 		unindent();
 		return new FormalParametersNode(fpsections);
 	}
-	
+
 	// FPSection = [�VAR�] IdentList �:� Type.
 	static FpSectionNode fpSection() {
 		printFunction("FPSection");
@@ -660,21 +927,24 @@ public class Parser {
 				insymbol();
 				if (isIdent() || isArray() || isRecord()) {
 					fpSection = new FpSectionNode(identList, type());
-				} else error("Type expected");
-			} else error("':' expected");
-		} else error("IdentList expected");
+				} else
+					error("Type expected");
+			} else
+				error("':' expected");
+		} else
+			error("IdentList expected");
 		unindent();
 		return fpSection;
 	}
-	
-	// Assignment = ident Selector �:=� Expression.	
-	static AbstractNode assignment(Token save){
+
+	// Assignment = ident Selector �:=� Expression.
+	static AbstractNode assignment(Token save) {
 		printFunction("Assignment");
 		indent();
 		AbstractNode assignment = null;
 		AbstractNode subject = null;
 		if (save.id() == ID) {
-			printThisSymbol(save);			
+			printThisSymbol(save);
 			IdentNode ident = new IdentNode(save.text());
 			if (isDot() || isLbrac()) {
 				subject = selector(ident);
@@ -686,13 +956,16 @@ public class Parser {
 				insymbol();
 				if (isExpression()) {
 					assignment = new AssignmentNode(subject, expression());
-				} else error("Expression expected");
-			} else error("':=' expected");
-		} else error("Ident expected");
+				} else
+					error("Expression expected");
+			} else
+				error("':=' expected");
+		} else
+			error("Ident expected");
 		unindent();
 		return assignment;
 	}
-	
+
 	// ProcedureCall = ident �(� [ActualParameters] �)�.
 	static AbstractNode procedureCall(Token save) {
 		printFunction("ProcedureCall");
@@ -712,14 +985,18 @@ public class Parser {
 				if (isRpar()) {
 					printNextSymbol();
 					insymbol();
-					procedureCall = new ProcedureCallNode(ident, actualParameters);
-				} else error("')' expected");
-			} else error("'(' expected");
-		} else error("Ident expected");
+					procedureCall = new ProcedureCallNode(ident,
+							actualParameters);
+				} else
+					error("')' expected");
+			} else
+				error("'(' expected");
+		} else
+			error("Ident expected");
 		unindent();
 		return procedureCall;
 	}
-	
+
 	// ActualParameters = Expression {�,� Expression}.
 	static AbstractNode actualParameters() {
 		printFunction("ActualParameters");
@@ -727,19 +1004,22 @@ public class Parser {
 		List<AbstractNode> expressions = new ArrayList<AbstractNode>();
 		if (isExpression()) {
 			expressions.add(expression());
-		} else error("Expression expected");
+		} else
+			error("Expression expected");
 		while (isComma()) {
 			printNextSymbol();
 			insymbol();
 			if (isExpression()) {
 				expressions.add(expression());
-			} else error("Expression expected");
+			} else
+				error("Expression expected");
 		}
 		unindent();
 		return new ActualParametersNode(expressions);
 	}
-	
-	// Statement = [Assignment | ProcedureCall | IfStatement | �PRINT� Expression | WhileStatement | RepeatStatement].
+
+	// Statement = [Assignment | ProcedureCall | IfStatement | �PRINT�
+	// Expression | WhileStatement | RepeatStatement].
 	static AbstractNode statement() {
 		printFunction("Statement");
 		indent();
@@ -751,16 +1031,17 @@ public class Parser {
 				statement = assignment(save);
 			} else if ((isLpar())) {
 				statement = procedureCall(save);
-			} else error("Selector, ':=' or '(' expected");
+			} else
+				error("Selector, ':=' or '(' expected");
 		} else if (isIf()) {
 			statement = ifStatement();
 		} else if (isPrint()) {
-//			printNextSymbol();
-//			insymbol();
-//			if (isExpression()) {
-//			System.out.println("hi");
-				statement = print();
-//			} else error("Expression expected");
+			// printNextSymbol();
+			// insymbol();
+			// if (isExpression()) {
+			// System.out.println("hi");
+			statement = print();
+			// } else error("Expression expected");
 		} else if (isWhile()) {
 			statement = whileStatement();
 		} else if (isRepeat()) {
@@ -769,9 +1050,9 @@ public class Parser {
 		unindent();
 		return statement;
 	}
-	
+
 	// StatementSequence = Statement {�;� Statement}.
-	static AbstractNode statementSequence(){
+	static AbstractNode statementSequence() {
 		printFunction("StatementSequence");
 		indent();
 		ArrayList<AbstractNode> statements = new ArrayList<AbstractNode>();
@@ -788,11 +1069,11 @@ public class Parser {
 		unindent();
 		return new StatementSequenceNode(statements);
 	}
-	
+
 	// IfStatement = �IF� Expression �THEN� StatementSequence
 	// {�ELSIF� Expression �THEN� StatementSequence}
 	// [�ELSE� StatementSequence] �END�.
-	static IfStatementNode ifStatement(){
+	static IfStatementNode ifStatement() {
 		printFunction("IfStatement");
 		indent();
 		IfStatementNode ifStatement = null;
@@ -818,21 +1099,29 @@ public class Parser {
 							insymbol();
 							if (isStatement()) {
 								statementSequence2 = statementSequence();
-							} else error("Statement expected");
+							} else
+								error("Statement expected");
 						}
 						if (isEnd()) {
 							printNextSymbol();
 							insymbol();
-							ifStatement = new IfStatementNode(expression, statementSequence1, elseIfs, statementSequence2);
-						} else error("'end' expected");
-					} else error("Statement expected");
-				} else error("'then' expected");
-			} else error("Expression expected");
-		} else error("'if' expected");
+							ifStatement = new IfStatementNode(expression,
+									statementSequence1, elseIfs,
+									statementSequence2);
+						} else
+							error("'end' expected");
+					} else
+						error("Statement expected");
+				} else
+					error("'then' expected");
+			} else
+				error("Expression expected");
+		} else
+			error("'if' expected");
 		unindent();
 		return ifStatement;
 	}
-	
+
 	static IfStatementNode ifStatement_() {
 		IfStatementNode ifStatementNode = null;
 		AbstractNode expression = null;
@@ -845,14 +1134,20 @@ public class Parser {
 				if (isThen()) {
 					if (isStatement()) {
 						statementSequence = statementSequence();
-						ifStatementNode = new IfStatementNode(expression, statementSequence, isElseIf() ? ifStatement_() : null, null);
-					} else error("Statement expected");
-				} else error("'then' expected");
-			} else error("Expression expected");
-		} else error("'elseif' expected");
+						ifStatementNode = new IfStatementNode(expression,
+								statementSequence, isElseIf() ? ifStatement_()
+										: null, null);
+					} else
+						error("Statement expected");
+				} else
+					error("'then' expected");
+			} else
+				error("Expression expected");
+		} else
+			error("'elseif' expected");
 		return ifStatementNode;
 	}
-	
+
 	// WhileStatement = �WHILE� Expression �DO� StatementSequence �END�.
 	static AbstractNode whileStatement() {
 		printFunction("WhileStatement");
@@ -874,15 +1169,20 @@ public class Parser {
 					if (isEnd()) {
 						printNextSymbol();
 						insymbol();
-						whileStatement = new WhileStatementNode(expression, statementSequence);
-					} else error("'end' expected");
-				} else error("'do' expected");
-			} else error("Expression expected");
-		} else error("'while' expected");
+						whileStatement = new WhileStatementNode(expression,
+								statementSequence);
+					} else
+						error("'end' expected");
+				} else
+					error("'do' expected");
+			} else
+				error("Expression expected");
+		} else
+			error("'while' expected");
 		unindent();
 		return whileStatement;
 	}
-	
+
 	// RepeatStatement = �REPEAT� StatementSequence �UNTIL� Expression.
 	static AbstractNode repeatStatement() {
 		printFunction("RepeatStatement");
@@ -898,44 +1198,51 @@ public class Parser {
 					printNextSymbol();
 					insymbol();
 					if (isExpression()) {
-						repeatStatement = new RepeatStatementNode(statementSequence, expression());
-					} else error("Expression expected");
-				} else error("'until' expected");
-			} else error("Statement expected");
-		} else error("'repeat' expected");
+						repeatStatement = new RepeatStatementNode(
+								statementSequence, expression());
+					} else
+						error("Expression expected");
+				} else
+					error("'until' expected");
+			} else
+				error("Statement expected");
+		} else
+			error("'repeat' expected");
 		unindent();
 		return repeatStatement;
 	}
-	
+
 	static IdentNode constIdent() {
 		printFunction("ConstIdent");
-		IdentNode ident = null;		
+		IdentNode ident = null;
 		indent();
 		if (isIdent()) {
 			printNextSymbol();
 			ident = new IdentNode(nextSym.text());
 			insymbol();
-		} else error("Ident expected");
+		} else
+			error("Ident expected");
 		unindent();
 		return ident;
 	}
-	
+
 	static IntegerNode integerNode() {
 		printFunction("Integer");
 		indent();
-		IntegerNode integerNode = null;			
+		IntegerNode integerNode = null;
 		if (isInteger()) {
 			printNextSymbol();
-			integerNode = new IntegerNode(Integer.valueOf(nextSym.text()));			
+			integerNode = new IntegerNode(Integer.valueOf(nextSym.text()));
 			insymbol();
-		} else error ("Integer expected");
+		} else
+			error("Integer expected");
 		return integerNode;
 	}
-	
+
 	static StringNode stringNode() {
 		printFunction("String");
 		indent();
-		StringNode stringNode = null;			
+		StringNode stringNode = null;
 		if (isString()) {
 			printNextSymbol();
 			insymbol();
@@ -950,12 +1257,15 @@ public class Parser {
 					printNextSymbol();
 					stringNode = new StringNode(sb.toString());
 					insymbol();
-				} else error("' ' ' expected");
-			} else error("Ident expected");
-		} else error ("String expected");
+				} else
+					error("' ' ' expected");
+			} else
+				error("Ident expected");
+		} else
+			error("String expected");
 		return stringNode;
 	}
-	
+
 	static AbstractNode indexExpression() {
 		printFunction("IndexExpression");
 		indent();
@@ -964,7 +1274,8 @@ public class Parser {
 			indexExpression = integerNode();
 		} else if (isIdent()) {
 			indexExpression = constIdent();
-		} else error("Integer or Ident expected");
+		} else
+			error("Integer or Ident expected");
 		unindent();
 		return indexExpression;
 	}

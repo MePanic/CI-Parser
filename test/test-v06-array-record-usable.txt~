@@ -1,21 +1,21 @@
-module v06;
+amodule v06;
 
 var
 
 v : array[10] of
-     array[20] of integer;
+  array[20] of integer;
 
 c : record
-	 a, b : integer;
-	 c : array[10] of integer;
-	 d : record
-	 	  x, y, z : integer;
-	 	  u, v : record
-	 	  		  w : array[5] of integer;
-	 	  		  t : integer;
-	 	  		 end;
-	 	 end;
-	 end;	 	 
+  a, b : integer;
+  c : array[10] of integer;
+  d : record
+    x, y, z : integer;
+    u, v : record
+      w : array[5] of integer;
+      t : integer;
+      end;
+    end;
+  end;	 	 
 
 begin
  v[2][7] := 99;

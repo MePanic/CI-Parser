@@ -1,2 +1,3 @@
 /home/meph/workspace/CI/test/test_oberon0.txt
 /home/meph/workspace/CI/test/test-v06-array-record-usable.txt
+/home/meph/workspace/CI/test/Oberon0/test0-integer-ops.txt

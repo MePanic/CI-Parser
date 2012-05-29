@@ -15,7 +15,7 @@ public class ArraySelectorNode extends AbstractNode {
     @Override
     public String toString(int indent) {
     	StringBuilder sb = new StringBuilder();
-    	sb.append(toString(indent, "RecordSelectorNode\n"));
+    	sb.append(toString(indent, "ArraySelectorNode\n"));
     	indent++;
     	sb.append(subject.toString(indent));
     	sb.append(selector.toString(indent));

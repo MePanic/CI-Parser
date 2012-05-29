@@ -17,7 +17,6 @@ public class RecordTypeNode extends AbstractNode {
         StringBuilder sb = new StringBuilder();
         sb.append(toString(indent, "RecordTypeNode\n"));
         indent++;
-        System.out.println(fieldLists.size());
         for (AbstractNode node : fieldLists) {
         	if(node != null){ /*System.out.println("hier");*/
             sb.append(node.toString(indent));

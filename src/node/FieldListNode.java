@@ -22,7 +22,7 @@ public class FieldListNode extends AbstractNode {
 			sb.append(identList.toString(indent));
 		if (type != null)
 //			System.out.println("type " + (type.line+1) + " - " + (type.column+1));
-			sb.append(type.toString(indent));
+			sb.append(type.toString(indent+1));
 		return sb.toString();
 	}
 }
