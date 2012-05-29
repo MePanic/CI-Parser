@@ -8,7 +8,8 @@ public abstract class AbstractDescr implements Serializable {
 	protected int level;
 
 	public AbstractDescr() {
-		// this.size = 0; this.level = CodeGen.level;
+		this.size = 0;
+		// this.level = CodeGen.level;
 	}
 
 	public int getLevel() {
