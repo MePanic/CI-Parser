@@ -1,0 +1,733 @@
+module v06;
+
+var
+
+v : array[10] of
+     array[20] of integer;
+
+c : record
+	 a, b : integer;
+	 c : array[10] of integer;
+	 d : record
+	 	  x, y, z : integer;
+	 	  u, v : record
+	 	  		  w : array[5] of integer;
+	 	  		  t : integer;
+	 	  		 end;
+	 	 end;
+	 end;	 	 
+
+begin
+ v[2][7] := 99;
+ c.c[2]  := v[2][7];
+ c.b     := c.c[2];
+ c.d.y   := c.b;
+ c.d.u.t := c.d.y;
+ c.d.v.w[2] := c.d.u.t;
+ 
+ v[1][1] := c.d.v.w[2];
+ print v[1][1];
+end v06. 
+
+Recursive Descent - Version 1.01
+  ProgNode v06
+    VardecNode 
+      VarNode 
+        IdfNode v
+        ArrayNode 
+          IntNode 10
+          ArrayNode 
+            IntNode 20
+            IdfNode integer
+      VarNode 
+        IdfNode c
+        RecordNode 
+          FieldListNode 
+            FieldNode 
+              IdfNode a
+              IdfNode b
+              IdfNode integer
+            FieldNode 
+              IdfNode c
+              ArrayNode 
+                IntNode 10
+                IdfNode integer
+            FieldNode 
+              IdfNode d
+              RecordNode 
+                FieldListNode 
+                  FieldNode 
+                    IdfNode x
+                    IdfNode y
+                    IdfNode z
+                    IdfNode integer
+                  FieldNode 
+                    IdfNode u
+                    IdfNode v
+                    RecordNode 
+                      FieldListNode 
+                        FieldNode 
+                          IdfNode w
+                          ArrayNode 
+                            IntNode 5
+                            IdfNode integer
+                        FieldNode 
+                          IdfNode t
+                          IdfNode integer
+    Listnode
+      AssNode
+        ArrayRefNode 
+          ArrayRefNode 
+            IdfNode v
+            IntNode 2
+          IntNode 7
+        IntNode 99
+      AssNode
+        ArrayRefNode 
+          RecordRefNode 
+            IdfNode c
+            FieldIdNode c
+          IntNode 2
+        ContNode 
+          ArrayRefNode 
+            ArrayRefNode 
+              IdfNode v
+              IntNode 2
+            IntNode 7
+      AssNode
+        RecordRefNode 
+          IdfNode c
+          FieldIdNode b
+        ContNode 
+          ArrayRefNode 
+            RecordRefNode 
+              IdfNode c
+              FieldIdNode c
+            IntNode 2
+      AssNode
+        RecordRefNode 
+          RecordRefNode 
+            IdfNode c
+            FieldIdNode d
+          FieldIdNode y
+        ContNode 
+          RecordRefNode 
+            IdfNode c
+            FieldIdNode b
+      AssNode
+        RecordRefNode 
+          RecordRefNode 
+            RecordRefNode 
+              IdfNode c
+              FieldIdNode d
+            FieldIdNode u
+          FieldIdNode t
+        ContNode 
+          RecordRefNode 
+            RecordRefNode 
+              IdfNode c
+              FieldIdNode d
+            FieldIdNode y
+      AssNode
+        ArrayRefNode 
+          RecordRefNode 
+            RecordRefNode 
+              RecordRefNode 
+                IdfNode c
+                FieldIdNode d
+              FieldIdNode v
+            FieldIdNode w
+          IntNode 2
+        ContNode 
+          RecordRefNode 
+            RecordRefNode 
+              RecordRefNode 
+                IdfNode c
+                FieldIdNode d
+              FieldIdNode u
+            FieldIdNode t
+      AssNode
+        ArrayRefNode 
+          ArrayRefNode 
+            IdfNode v
+            IntNode 1
+          IntNode 1
+        ContNode 
+          ArrayRefNode 
+            RecordRefNode 
+              RecordRefNode 
+                RecordRefNode 
+                  IdfNode c
+                  FieldIdNode d
+                FieldIdNode v
+              FieldIdNode w
+            IntNode 2
+      PrintNode 
+        ContNode 
+          ArrayRefNode 
+            ArrayRefNode 
+              IdfNode v
+              IntNode 1
+            IntNode 1
+
+== abstract tree rausschreiben ==
+== CodeGen abstract tree wieder einlesen ==
+== CodeGen auf gehts ==
+  ProgNode v06 0
+PUSHS, v06
+JMP, 0
+    VardecNode 
+      VarNode 
+        ArrayNode 10
+          ArrayNode 20
+      VarNode 
+        RecordNode 
+          FieldListNode 
+            FieldNode 
+            FieldNode 
+              ArrayNode 10
+            FieldNode 
+              RecordNode 
+                FieldListNode 
+                  FieldNode 
+                  FieldNode 
+                    RecordNode 
+                      FieldListNode 
+                        FieldNode 
+                          ArrayNode 5
+                        FieldNode 
+LABEL, 0
+PUSHI, 227
+SETSP
+    Listnode
+      AssNode
+        IntNode 99
+PUSHI, 99
+        ArrayRefNode 
+          ArrayRefNode 
+            IdfNode v 0
+PUSHI, 0
+            IntNode 2
+PUSHI, 2
+PUSHI, 20
+MUL
+ADD
+          IntNode 7
+PUSHI, 7
+PUSHI, 1
+MUL
+ADD
+ASSIGN, 1
+      AssNode
+        ContNode 
+          ArrayRefNode 
+            ArrayRefNode 
+              IdfNode v 0
+PUSHI, 0
+              IntNode 2
+PUSHI, 2
+PUSHI, 20
+MUL
+ADD
+            IntNode 7
+PUSHI, 7
+PUSHI, 1
+MUL
+ADD
+CONT, 1
+        ArrayRefNode 
+          RecordRefNode 
+            IdfNode c 0
+PUSHI, 200
+            FieldIdNode c
+PUSHI, 2
+ADD
+          IntNode 2
+PUSHI, 2
+PUSHI, 1
+MUL
+ADD
+ASSIGN, 1
+      AssNode
+        ContNode 
+          ArrayRefNode 
+            RecordRefNode 
+              IdfNode c 0
+PUSHI, 200
+              FieldIdNode c
+PUSHI, 2
+ADD
+            IntNode 2
+PUSHI, 2
+PUSHI, 1
+MUL
+ADD
+CONT, 1
+        RecordRefNode 
+          IdfNode c 0
+PUSHI, 200
+          FieldIdNode b
+PUSHI, 1
+ADD
+ASSIGN, 1
+      AssNode
+        ContNode 
+          RecordRefNode 
+            IdfNode c 0
+PUSHI, 200
+            FieldIdNode b
+PUSHI, 1
+ADD
+CONT, 1
+        RecordRefNode 
+          RecordRefNode 
+            IdfNode c 0
+PUSHI, 200
+            FieldIdNode d
+PUSHI, 12
+ADD
+          FieldIdNode y
+PUSHI, 1
+ADD
+ASSIGN, 1
+      AssNode
+        ContNode 
+          RecordRefNode 
+            RecordRefNode 
+              IdfNode c 0
+PUSHI, 200
+              FieldIdNode d
+PUSHI, 12
+ADD
+            FieldIdNode y
+PUSHI, 1
+ADD
+CONT, 1
+        RecordRefNode 
+          RecordRefNode 
+            RecordRefNode 
+              IdfNode c 0
+PUSHI, 200
+              FieldIdNode d
+PUSHI, 12
+ADD
+            FieldIdNode u
+PUSHI, 3
+ADD
+          FieldIdNode t
+PUSHI, 5
+ADD
+ASSIGN, 1
+      AssNode
+        ContNode 
+          RecordRefNode 
+            RecordRefNode 
+              RecordRefNode 
+                IdfNode c 0
+PUSHI, 200
+                FieldIdNode d
+PUSHI, 12
+ADD
+              FieldIdNode u
+PUSHI, 3
+ADD
+            FieldIdNode t
+PUSHI, 5
+ADD
+CONT, 1
+        ArrayRefNode 
+          RecordRefNode 
+            RecordRefNode 
+              RecordRefNode 
+                IdfNode c 0
+PUSHI, 200
+                FieldIdNode d
+PUSHI, 12
+ADD
+              FieldIdNode v
+PUSHI, 9
+ADD
+            FieldIdNode w
+PUSHI, 0
+ADD
+          IntNode 2
+PUSHI, 2
+PUSHI, 1
+MUL
+ADD
+ASSIGN, 1
+      AssNode
+        ContNode 
+          ArrayRefNode 
+            RecordRefNode 
+              RecordRefNode 
+                RecordRefNode 
+                  IdfNode c 0
+PUSHI, 200
+                  FieldIdNode d
+PUSHI, 12
+ADD
+                FieldIdNode v
+PUSHI, 9
+ADD
+              FieldIdNode w
+PUSHI, 0
+ADD
+            IntNode 2
+PUSHI, 2
+PUSHI, 1
+MUL
+ADD
+CONT, 1
+        ArrayRefNode 
+          ArrayRefNode 
+            IdfNode v 0
+PUSHI, 0
+            IntNode 1
+PUSHI, 1
+PUSHI, 20
+MUL
+ADD
+          IntNode 1
+PUSHI, 1
+PUSHI, 1
+MUL
+ADD
+ASSIGN, 1
+      PrintNode 
+        ContNode 
+          ArrayRefNode 
+            ArrayRefNode 
+              IdfNode v 0
+PUSHI, 0
+              IntNode 1
+PUSHI, 1
+PUSHI, 20
+MUL
+ADD
+            IntNode 1
+PUSHI, 1
+PUSHI, 1
+MUL
+ADD
+CONT, 1
+PRINT
++++ FixUp program length = 124
+position 1 0
++++ Ende Fixup
+STOP
+====== Symboltabelle
+    v
+  VarDescr: 0 level: 0
+    ArrayDescr: numberelems: 10 size: 200
+      ArrayDescr: numberelems: 20 size: 20
+        SimpleTypeDescr: integer size: 1 level: 0
+    real
+  SimpleTypeDescr: real size: 1 level: 0
+    c
+  VarDescr: 200 level: 0
+    RecordDescr: size: 27 level: 0
+      d
+      VarDescr: 12 level: 0
+        RecordDescr: size: 15 level: 0
+          v
+          VarDescr: 9 level: 0
+            RecordDescr: size: 6 level: 0
+              w
+              VarDescr: 0 level: 0
+                ArrayDescr: numberelems: 5 size: 5
+                  SimpleTypeDescr: integer size: 1 level: 0
+              t
+              VarDescr: 5 level: 0
+                SimpleTypeDescr: integer size: 1 level: 0
+          u
+          VarDescr: 3 level: 0
+            RecordDescr: size: 6 level: 0
+              w
+              VarDescr: 0 level: 0
+                ArrayDescr: numberelems: 5 size: 5
+                  SimpleTypeDescr: integer size: 1 level: 0
+              t
+              VarDescr: 5 level: 0
+                SimpleTypeDescr: integer size: 1 level: 0
+          z
+          VarDescr: 2 level: 0
+            SimpleTypeDescr: integer size: 1 level: 0
+          y
+          VarDescr: 1 level: 0
+            SimpleTypeDescr: integer size: 1 level: 0
+          x
+          VarDescr: 0 level: 0
+            SimpleTypeDescr: integer size: 1 level: 0
+      b
+      VarDescr: 1 level: 0
+        SimpleTypeDescr: integer size: 1 level: 0
+      c
+      VarDescr: 2 level: 0
+        ArrayDescr: numberelems: 10 size: 10
+          SimpleTypeDescr: integer size: 1 level: 0
+      a
+      VarDescr: 0 level: 0
+        SimpleTypeDescr: integer size: 1 level: 0
+    char
+  SimpleTypeDescr: char size: 1 level: 0
+    integer
+  SimpleTypeDescr: integer size: 1 level: 0
+    string
+  SimpleTypeDescr: string size: 1 level: 0
+    boolean
+  SimpleTypeDescr: boolean size: 1 level: 0
+== CodeGen code für Interpretierer rausschreiben ==
+== code für Interpretierer wieder einlesen ==
+*** dump instructions begin
+0 Interpret StrInstr v06
+1 Interpret JUMP 2
+2 Interpret LabelVal 0
+3 Interpret IntVal 227
+4 Interpret SetSP
+5 Interpret IntVal 99
+6 Interpret IntVal 0
+7 Interpret IntVal 2
+8 Interpret IntVal 20
+9 Interpret MUL
+10 Interpret ADD
+11 Interpret IntVal 7
+12 Interpret IntVal 1
+13 Interpret MUL
+14 Interpret ADD
+15 Interpret ASSIGN 1
+16 Interpret IntVal 0
+17 Interpret IntVal 2
+18 Interpret IntVal 20
+19 Interpret MUL
+20 Interpret ADD
+21 Interpret IntVal 7
+22 Interpret IntVal 1
+23 Interpret MUL
+24 Interpret ADD
+25 Interpret ContInstruction 1
+26 Interpret IntVal 200
+27 Interpret IntVal 2
+28 Interpret ADD
+29 Interpret IntVal 2
+30 Interpret IntVal 1
+31 Interpret MUL
+32 Interpret ADD
+33 Interpret ASSIGN 1
+34 Interpret IntVal 200
+35 Interpret IntVal 2
+36 Interpret ADD
+37 Interpret IntVal 2
+38 Interpret IntVal 1
+39 Interpret MUL
+40 Interpret ADD
+41 Interpret ContInstruction 1
+42 Interpret IntVal 200
+43 Interpret IntVal 1
+44 Interpret ADD
+45 Interpret ASSIGN 1
+46 Interpret IntVal 200
+47 Interpret IntVal 1
+48 Interpret ADD
+49 Interpret ContInstruction 1
+50 Interpret IntVal 200
+51 Interpret IntVal 12
+52 Interpret ADD
+53 Interpret IntVal 1
+54 Interpret ADD
+55 Interpret ASSIGN 1
+56 Interpret IntVal 200
+57 Interpret IntVal 12
+58 Interpret ADD
+59 Interpret IntVal 1
+60 Interpret ADD
+61 Interpret ContInstruction 1
+62 Interpret IntVal 200
+63 Interpret IntVal 12
+64 Interpret ADD
+65 Interpret IntVal 3
+66 Interpret ADD
+67 Interpret IntVal 5
+68 Interpret ADD
+69 Interpret ASSIGN 1
+70 Interpret IntVal 200
+71 Interpret IntVal 12
+72 Interpret ADD
+73 Interpret IntVal 3
+74 Interpret ADD
+75 Interpret IntVal 5
+76 Interpret ADD
+77 Interpret ContInstruction 1
+78 Interpret IntVal 200
+79 Interpret IntVal 12
+80 Interpret ADD
+81 Interpret IntVal 9
+82 Interpret ADD
+83 Interpret IntVal 0
+84 Interpret ADD
+85 Interpret IntVal 2
+86 Interpret IntVal 1
+87 Interpret MUL
+88 Interpret ADD
+89 Interpret ASSIGN 1
+90 Interpret IntVal 200
+91 Interpret IntVal 12
+92 Interpret ADD
+93 Interpret IntVal 9
+94 Interpret ADD
+95 Interpret IntVal 0
+96 Interpret ADD
+97 Interpret IntVal 2
+98 Interpret IntVal 1
+99 Interpret MUL
+100 Interpret ADD
+101 Interpret ContInstruction 1
+102 Interpret IntVal 0
+103 Interpret IntVal 1
+104 Interpret IntVal 20
+105 Interpret MUL
+106 Interpret ADD
+107 Interpret IntVal 1
+108 Interpret IntVal 1
+109 Interpret MUL
+110 Interpret ADD
+111 Interpret ASSIGN 1
+112 Interpret IntVal 0
+113 Interpret IntVal 1
+114 Interpret IntVal 20
+115 Interpret MUL
+116 Interpret ADD
+117 Interpret IntVal 1
+118 Interpret IntVal 1
+119 Interpret MUL
+120 Interpret ADD
+121 Interpret ContInstruction 1
+122 Interpret PrintInstruction
+123 Interpret StopInstruction
+*** dump instructions end
+0 Interpret StrInstr v06
+1 Interpret JMP 2
+2 Interpret LabelVal 0
+3 Interpret IntVal 227
+4 Interpret SetSP
+5 Interpret IntVal 99
+6 Interpret IntVal 0
+7 Interpret IntVal 2
+8 Interpret IntVal 20
+2 * 20
+0 + 40
+11 Interpret IntVal 7
+12 Interpret IntVal 1
+7 * 1
+40 + 7
+addr(47) := 99
+16 Interpret IntVal 0
+17 Interpret IntVal 2
+18 Interpret IntVal 20
+2 * 20
+0 + 40
+21 Interpret IntVal 7
+22 Interpret IntVal 1
+7 * 1
+40 + 7
+25 Interpret ContInstruction Addr = 47 value = 99
+26 Interpret IntVal 200
+27 Interpret IntVal 2
+200 + 2
+29 Interpret IntVal 2
+30 Interpret IntVal 1
+2 * 1
+202 + 2
+addr(204) := 99
+34 Interpret IntVal 200
+35 Interpret IntVal 2
+200 + 2
+37 Interpret IntVal 2
+38 Interpret IntVal 1
+2 * 1
+202 + 2
+41 Interpret ContInstruction Addr = 204 value = 99
+42 Interpret IntVal 200
+43 Interpret IntVal 1
+200 + 1
+addr(201) := 99
+46 Interpret IntVal 200
+47 Interpret IntVal 1
+200 + 1
+49 Interpret ContInstruction Addr = 201 value = 99
+50 Interpret IntVal 200
+51 Interpret IntVal 12
+200 + 12
+53 Interpret IntVal 1
+212 + 1
+addr(213) := 99
+56 Interpret IntVal 200
+57 Interpret IntVal 12
+200 + 12
+59 Interpret IntVal 1
+212 + 1
+61 Interpret ContInstruction Addr = 213 value = 99
+62 Interpret IntVal 200
+63 Interpret IntVal 12
+200 + 12
+65 Interpret IntVal 3
+212 + 3
+67 Interpret IntVal 5
+215 + 5
+addr(220) := 99
+70 Interpret IntVal 200
+71 Interpret IntVal 12
+200 + 12
+73 Interpret IntVal 3
+212 + 3
+75 Interpret IntVal 5
+215 + 5
+77 Interpret ContInstruction Addr = 220 value = 99
+78 Interpret IntVal 200
+79 Interpret IntVal 12
+200 + 12
+81 Interpret IntVal 9
+212 + 9
+83 Interpret IntVal 0
+221 + 0
+85 Interpret IntVal 2
+86 Interpret IntVal 1
+2 * 1
+221 + 2
+addr(223) := 99
+90 Interpret IntVal 200
+91 Interpret IntVal 12
+200 + 12
+93 Interpret IntVal 9
+212 + 9
+95 Interpret IntVal 0
+221 + 0
+97 Interpret IntVal 2
+98 Interpret IntVal 1
+2 * 1
+221 + 2
+101 Interpret ContInstruction Addr = 223 value = 99
+102 Interpret IntVal 0
+103 Interpret IntVal 1
+104 Interpret IntVal 20
+1 * 20
+0 + 20
+107 Interpret IntVal 1
+108 Interpret IntVal 1
+1 * 1
+20 + 1
+addr(21) := 99
+112 Interpret IntVal 0
+113 Interpret IntVal 1
+114 Interpret IntVal 20
+1 * 20
+0 + 20
+117 Interpret IntVal 1
+118 Interpret IntVal 1
+1 * 1
+20 + 1
+121 Interpret ContInstruction Addr = 21 value = 99
+99
+123 Interpret StopInstruction
+Und Tschüss!
+	 	  		  

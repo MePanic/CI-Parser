@@ -52,9 +52,9 @@ public class Parser {
 	
 	public static void indent() { spaces = spaces + "  "; }
 	public static void unindent() { spaces = spaces.substring(2); }
-	public static void printNextSymbol() { System.out.println(spaces + " -- " + nextSym.id() + " "); }
-	public static void printThisSymbol(Token t) { System.out.println(spaces + " -- " + t.id() + " "); }
-	public static void printFunction(String name) { System.out.println(spaces + name/* +": " + nextsymbol*/); }
+	public static void printNextSymbol() { /*System.out.println(spaces + " -- " + nextSym.id() + " "); */}
+	public static void printThisSymbol(Token t) {/* System.out.println(spaces + " -- " + t.id() + " "); */}
+	public static void printFunction(String name) { /*System.out.println(spaces + name/* +": " + nextsymbol);*/ }
 	public static String place() { return("l: " + (nextSym.line() + 1) + ", c:" + (nextSym.column() + 1)); }
 	
 	public static void error(String str) {
@@ -141,9 +141,9 @@ public class Parser {
 		return null;
 	}
 	
-	// Module = ÕMODULEÕ ident Õ;Õ Declarations
-	// ÕBEGINÕ StatementSequence
-	// ÕENDÕ ident Õ
+	// Module = ï¿½MODULEï¿½ ident ï¿½;ï¿½ Declarations
+	// ï¿½BEGINï¿½ StatementSequence
+	// ï¿½ENDï¿½ ident ï¿½
 	static AbstractNode module() {
 		printFunction("Module");
 		indent();
@@ -185,10 +185,10 @@ public class Parser {
 		return module;
 	}
 	
-	// Declarations = [ÕCONSTÕ ident Õ=Õ Expression Õ;Õ {ident Õ=Õ Expression Õ;Õ}]
-	// [ÕTYPEÕ ident Õ=Õ Type Õ;Õ {ident Õ=Õ Type Õ;Õ}]
-	// [ÕVARÕ IdentList Õ:Õ Type Õ;Õ {IdentList Õ:Õ Type Õ;Õ}]
-	// {ProcedureDeclaration Õ;Õ}
+	// Declarations = [ï¿½CONSTï¿½ ident ï¿½=ï¿½ Expression ï¿½;ï¿½ {ident ï¿½=ï¿½ Expression ï¿½;ï¿½}]
+	// [ï¿½TYPEï¿½ ident ï¿½=ï¿½ Type ï¿½;ï¿½ {ident ï¿½=ï¿½ Type ï¿½;ï¿½}]
+	// [ï¿½VARï¿½ IdentList ï¿½:ï¿½ Type ï¿½;ï¿½ {IdentList ï¿½:ï¿½ Type ï¿½;ï¿½}]
+	// {ProcedureDeclaration ï¿½;ï¿½}
 	static AbstractNode declarations() {
 		printFunction("Declarations");
 		indent();
@@ -282,7 +282,7 @@ public class Parser {
 	}
 	
 	// Expression = SimpleExpression
-	// [(Õ=Õ | Õ#Õ | Õ<Õ | Õ<=Õ | Õ>Õ | Õ>=Õ) SimpleExpression].
+	// [(ï¿½=ï¿½ | ï¿½#ï¿½ | ï¿½<ï¿½ | ï¿½<=ï¿½ | ï¿½>ï¿½ | ï¿½>=ï¿½) SimpleExpression].
 	static AbstractNode expression() {
 		printFunction("Expression");
 		indent();
@@ -316,8 +316,23 @@ public class Parser {
 		return expression;
 	}
 	
-	// SimpleExpression = [Õ-Õ] Term
-	// {(Õ+Õ | Õ-Õ) Term}.
+	static AbstractNode print(){
+		printFunction("Print");
+		indent();
+		AbstractNode print = null;
+		if (isPrint()) {
+			printNextSymbol();
+			insymbol();
+		} else error("'print' expected");
+		if (isExpression()) {
+			print = new PrintNode(expression());
+		}
+		unindent();
+		return print;
+	}
+	
+	// SimpleExpression = [ï¿½-ï¿½] Term
+	// {(ï¿½+ï¿½ | ï¿½-ï¿½) Term}.
 	static AbstractNode simpleExpression() {
 		printFunction("SimpleExpression");
 		AbstractNode simpleExpression = null;
@@ -338,14 +353,14 @@ public class Parser {
 				printNextSymbol();
 				insymbol();
 				simpleExpression = new BinOpNode(BinOp.MINUS_OP, simpleExpression, term());
-			} else error("(Õ+Õ | Õ-Õ) expected");
+			} else error("(ï¿½+ï¿½ | ï¿½-ï¿½) expected");
 		}
 		unindent();
 		return simpleExpression;
 	}
 	
 	// Term = Factor
-	// {(Õ*Õ | Õ/Õ) Factor}.
+	// {(ï¿½*ï¿½ | ï¿½/ï¿½) Factor}.
 	static AbstractNode term() {
 		printFunction("Term");
 		indent();
@@ -359,13 +374,13 @@ public class Parser {
 				printNextSymbol();
 				insymbol();
 				term = new BinOpNode(BinOp.DIV_OP, term, factor());
-			} else error("(Õ*Õ | Õ/Õ) expected");
+			} else error("(ï¿½*ï¿½ | ï¿½/ï¿½) expected");
 		}
 		unindent();
 		return term;
 	}
 	
-	// Factor = Ident Selector | Integer | String | Read | Õ(Õ Expression Õ)Õ.
+	// Factor = Ident Selector | Integer | String | Read | ï¿½(ï¿½ Expression ï¿½)ï¿½.
 	static AbstractNode factor() {
 		printFunction("Factor");
 		indent();
@@ -396,7 +411,7 @@ public class Parser {
 		return factor;
 	}
 	
-	// Selector = {Õ.Õ ident | Õ[Õ Expression Õ]Õ}.
+	// Selector = {ï¿½.ï¿½ ident | ï¿½[ï¿½ Expression ï¿½]ï¿½}.
 	static AbstractNode selector(IdentNode subject) {
 		printFunction("Selector");
 		indent();
@@ -417,7 +432,7 @@ public class Parser {
 					} else error("']' expected");
 				}
 			}
-		} else error ("('.' | Ô[Ô) expected");
+		} else error ("('.' | ï¿½[ï¿½) expected");
 		unindent();
 		return selector;
 	}
@@ -466,7 +481,7 @@ public class Parser {
 		return type;
 	}
 	
-	// ArrayType = ÕARRAYÕ Õ[Õ IndexExpression Õ]Õ ÕOFÕ Type.
+	// ArrayType = ï¿½ARRAYï¿½ ï¿½[ï¿½ IndexExpression ï¿½]ï¿½ ï¿½OFï¿½ Type.
 	static AbstractNode arrayType() {
 		printFunction("ArrayType");
 		indent();
@@ -498,8 +513,8 @@ public class Parser {
 		return arrayType;
 	}
 	
-	// RecordType = ÕRECORDÕ FieldList
-	// {Õ;Õ FieldList} ÕENDÕ.
+	// RecordType = ï¿½RECORDï¿½ FieldList
+	// {ï¿½;ï¿½ FieldList} ï¿½ENDï¿½.
 	static AbstractNode recordType(){
 		printFunction("RecordType");
 		indent();
@@ -522,7 +537,7 @@ public class Parser {
 		return new RecordTypeNode(fieldLists);
 	}
 	
-	// FieldList = [IdentList Õ:Õ Type].
+	// FieldList = [IdentList ï¿½:ï¿½ Type].
 	static FieldListNode fieldList() {
 		printFunction("FieldList");
 		indent();
@@ -542,7 +557,7 @@ public class Parser {
 		return fieldList;
 	}
 	
-	// IdentList = ident {Õ,Õ ident}.
+	// IdentList = ident {ï¿½,ï¿½ ident}.
 	static AbstractNode identList() {
 		printFunction("IdentList");
 		indent();
@@ -561,7 +576,7 @@ public class Parser {
 		return new IdentListNode(idents);
 	}
 	
-	// Procedure = ÕPROCEDUREÕ ident Õ(Õ [FormalParameters] Õ)Õ Õ;Õ Declarations ÕBEGINÕ StatementSequence ÕENDÕ ident.
+	// Procedure = ï¿½PROCEDUREï¿½ ident ï¿½(ï¿½ [FormalParameters] ï¿½)ï¿½ ï¿½;ï¿½ Declarations ï¿½BEGINï¿½ StatementSequence ï¿½ENDï¿½ ident.
 	static ProcedureNode procedure() {
 		printFunction("Procedure");
 		indent();
@@ -609,7 +624,7 @@ public class Parser {
 		return procedure;
 	}
 
-	// FormalParameters = FPSection {Õ;Õ FPSection}.
+	// FormalParameters = FPSection {ï¿½;ï¿½ FPSection}.
 	static FormalParametersNode formalParameters() {
 		printFunction("FormalParameters");
 		indent();
@@ -628,7 +643,7 @@ public class Parser {
 		return new FormalParametersNode(fpsections);
 	}
 	
-	// FPSection = [ÕVARÕ] IdentList Õ:Õ Type.
+	// FPSection = [ï¿½VARï¿½] IdentList ï¿½:ï¿½ Type.
 	static FpSectionNode fpSection() {
 		printFunction("FPSection");
 		indent();
@@ -652,7 +667,7 @@ public class Parser {
 		return fpSection;
 	}
 	
-	// Assignment = ident Selector Õ:=Õ Expression.	
+	// Assignment = ident Selector ï¿½:=ï¿½ Expression.	
 	static AbstractNode assignment(Token save){
 		printFunction("Assignment");
 		indent();
@@ -678,7 +693,7 @@ public class Parser {
 		return assignment;
 	}
 	
-	// ProcedureCall = ident Õ(Õ [ActualParameters] Õ)Õ.
+	// ProcedureCall = ident ï¿½(ï¿½ [ActualParameters] ï¿½)ï¿½.
 	static AbstractNode procedureCall(Token save) {
 		printFunction("ProcedureCall");
 		indent();
@@ -705,7 +720,7 @@ public class Parser {
 		return procedureCall;
 	}
 	
-	// ActualParameters = Expression {Õ,Õ Expression}.
+	// ActualParameters = Expression {ï¿½,ï¿½ Expression}.
 	static AbstractNode actualParameters() {
 		printFunction("ActualParameters");
 		indent();
@@ -724,7 +739,7 @@ public class Parser {
 		return new ActualParametersNode(expressions);
 	}
 	
-	// Statement = [Assignment | ProcedureCall | IfStatement | ÕPRINTÕ Expression | WhileStatement | RepeatStatement].
+	// Statement = [Assignment | ProcedureCall | IfStatement | ï¿½PRINTï¿½ Expression | WhileStatement | RepeatStatement].
 	static AbstractNode statement() {
 		printFunction("Statement");
 		indent();
@@ -740,11 +755,12 @@ public class Parser {
 		} else if (isIf()) {
 			statement = ifStatement();
 		} else if (isPrint()) {
-			printNextSymbol();
-			insymbol();
-			if (isExpression()) {
-				statement = expression();
-			} else error("Expression expected");
+//			printNextSymbol();
+//			insymbol();
+//			if (isExpression()) {
+//			System.out.println("hi");
+				statement = print();
+//			} else error("Expression expected");
 		} else if (isWhile()) {
 			statement = whileStatement();
 		} else if (isRepeat()) {
@@ -754,7 +770,7 @@ public class Parser {
 		return statement;
 	}
 	
-	// StatementSequence = Statement {Õ;Õ Statement}.
+	// StatementSequence = Statement {ï¿½;ï¿½ Statement}.
 	static AbstractNode statementSequence(){
 		printFunction("StatementSequence");
 		indent();
@@ -773,9 +789,9 @@ public class Parser {
 		return new StatementSequenceNode(statements);
 	}
 	
-	// IfStatement = ÕIFÕ Expression ÕTHENÕ StatementSequence
-	// {ÕELSIFÕ Expression ÕTHENÕ StatementSequence}
-	// [ÕELSEÕ StatementSequence] ÕENDÕ.
+	// IfStatement = ï¿½IFï¿½ Expression ï¿½THENï¿½ StatementSequence
+	// {ï¿½ELSIFï¿½ Expression ï¿½THENï¿½ StatementSequence}
+	// [ï¿½ELSEï¿½ StatementSequence] ï¿½ENDï¿½.
 	static IfStatementNode ifStatement(){
 		printFunction("IfStatement");
 		indent();
@@ -837,7 +853,7 @@ public class Parser {
 		return ifStatementNode;
 	}
 	
-	// WhileStatement = ÕWHILEÕ Expression ÕDOÕ StatementSequence ÕENDÕ.
+	// WhileStatement = ï¿½WHILEï¿½ Expression ï¿½DOï¿½ StatementSequence ï¿½ENDï¿½.
 	static AbstractNode whileStatement() {
 		printFunction("WhileStatement");
 		indent();
@@ -867,7 +883,7 @@ public class Parser {
 		return whileStatement;
 	}
 	
-	// RepeatStatement = ÕREPEATÕ StatementSequence ÕUNTILÕ Expression.
+	// RepeatStatement = ï¿½REPEATï¿½ StatementSequence ï¿½UNTILï¿½ Expression.
 	static AbstractNode repeatStatement() {
 		printFunction("RepeatStatement");
 		indent();

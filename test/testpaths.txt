@@ -1,0 +1,2 @@
+/home/meph/workspace/CI/test/test_oberon0.txt
+/home/meph/workspace/CI/test/test-v06-array-record-usable.txt
