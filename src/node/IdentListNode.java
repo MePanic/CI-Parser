@@ -31,7 +31,7 @@ public class IdentListNode extends AbstractNode {
 
     	for(AbstractNode node : idents){
 //    		System.out.println(type);
-    		sm.declare(node.name(),	type.compile(sm));
+    		sm.declareVar(node.name(),	type.compile(sm));
     	}
 		return null;
 	}

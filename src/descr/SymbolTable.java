@@ -26,6 +26,12 @@ public class SymbolTable {
 		addressMap.put(ident, currentAddress);
 		currentAddress += descr.size();
 	}
+	
+	public void declareVar(String ident, AbstractDescr descr) {
+		AbstractDescrMap.put(ident, new VarDescr(currentAddress, descr));
+		addressMap.put(ident, currentAddress);
+		currentAddress += descr.size();
+	}
 
 	// public void undeclare(String ident){
 	// AbstractDescrMap.remove(ident);
@@ -41,6 +47,10 @@ public class SymbolTable {
 		return d;
 	}
 
+	public Map<String, AbstractDescr> getAllAbstractDescrs(){
+		return AbstractDescrMap;
+	}
+	
 	public int addressOf(String ident) {
 
 		if (addressMap.containsKey(ident)) {
@@ -61,7 +71,8 @@ public class SymbolTable {
 	public String toString(){
 		
 		for(String s : AbstractDescrMap.keySet()){
-			System.out.println("Entry " + s + " - " + AbstractDescrMap.get(s) + " - " + addressMap.get(s));
+			System.out.println(s);
+			System.out.println(AbstractDescrMap.get(s).toString(1));
 		}
 		
 		return "";

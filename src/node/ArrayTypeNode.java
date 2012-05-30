@@ -30,14 +30,13 @@ public class ArrayTypeNode extends AbstractNode {
 
 	@Override
 	public AbstractDescr compile(SymbolTable sm) {
-		System.out.println("hi");
+//		System.out.println("hi");
 		try {
-			return new ArrayDescr(indexExpression.getVal(), 4, type.compile(sm));
+			return new ArrayDescr(indexExpression.getVal(), type.compile(sm));
 		} catch (java.lang.Error e) {
 //			return new ArrayDescr(sm.AbstractDescrFor(indexExpression.name()),
 //					4, type.compile(sm));
-			return new ArrayDescr(10,
-					4, type.compile(sm));
+			return new ArrayDescr(10, type.compile(sm));
 		}
 	}
 }

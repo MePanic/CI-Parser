@@ -8,4 +8,10 @@ public class TypeDescr extends AbstractDescr {
 		return 0;
 	}
 
+	@Override
+	public String toString(int lev) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

@@ -15,4 +15,10 @@ public class ProcDescr extends AbstractDescr {
 	public int size() {
 		return symboltable.size()/* + framesize ? */;
 	}
+
+	@Override
+	public String toString(int lev) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

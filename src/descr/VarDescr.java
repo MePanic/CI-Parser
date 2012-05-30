@@ -16,4 +16,16 @@ public class VarDescr extends AbstractDescr {
 		// TODO Auto-generated method stub
 		return 0;
 	}
+
+	@Override
+	public String toString(int lev) {
+		// VarDescr: 0 level: 0
+		StringBuilder sb = new StringBuilder();
+		sb.append(toString(lev,"VarDescr: "+addr+" level: "+0 + "\n"));
+		lev++;
+	
+		sb.append(type.toString(lev));
+	
+		return sb.toString();
+	}
 }

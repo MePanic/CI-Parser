@@ -4,10 +4,11 @@ public class SimpleTypeDescr extends AbstractDescr {
 	
 	private static final long serialVersionUID = 1L;
 	String type;
-	int size = 0;
+	int size = 1;
 	
 	public SimpleTypeDescr(String type){
 		this.type = type;
+		size = 1;
 		if(type.equals("integer")) {this.size = 1;}
 	}
 
@@ -16,7 +17,8 @@ public class SimpleTypeDescr extends AbstractDescr {
 	}
 	
 	@Override
-	public String toString(){
-		return type;
+	public String toString(int lev){
+		
+		return toString(lev, "SimpleTypeDescr: " + type + " size: "+size+" level: 0");
 	}
 }
