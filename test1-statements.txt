@@ -33,8 +33,8 @@ begin
  k := 10;
  if k = 1
  then Print k
- elsif k = 2 then Print k
- elsif k = 3 then Print k
+ elsif k = 2 then
+ elsif k = 3 then
  elsif k = 10 then Print k
  else Print 999
  end

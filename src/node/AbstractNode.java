@@ -33,5 +33,7 @@ public abstract class AbstractNode implements Serializable {
         sb.append(string);
         return sb.toString();
 	}
+	
+//	public abstract String trace(SymbolTable sm);
 }
 

@@ -27,13 +27,16 @@ public class ArraySelectorNode extends AbstractNode {
 
 	@Override
 	public AbstractDescr compile(SymbolTable sm) {
-		// TODO Auto-generated method stub
+		
+		System.out.println(subject);
+		System.out.println(selector.getVal() + "--");
 		return null;
 	}
 
 	@Override
 	public AbstractDescr compile(SymbolTable sm, AbstractNode type) {
-		// TODO Auto-generated method stub
+		System.out.println(subject);
+		System.out.println(selector.getVal() + "--");
 		return null;
 	}
 
@@ -48,4 +51,19 @@ public class ArraySelectorNode extends AbstractNode {
 		// TODO Auto-generated method stub
 		return 0;
 	}
+
+//	@Override
+//	public String trace(SymbolTable sm) {
+//		StringBuilder res = new StringBuilder();
+//		res.append(subject.trace(sm));
+//
+//		int size = selector.compile(sm).size();
+//		System.out.println(size);
+//		if(size >1){
+//			res.append("PUSHI, " + size+"\n");
+//		}
+//		
+////		return  "" + selector.trace(null)+subject.trace(null) ;
+//		return res.toString();
+//	}
 }

@@ -14,4 +14,10 @@ public class TypeDescr extends AbstractDescr {
 		return null;
 	}
 
+	@Override
+	public void set(AbstractDescr descr) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

@@ -30,4 +30,10 @@ public class VarDescr extends AbstractDescr {
 	
 		return sb.toString();
 	}
+
+	@Override
+	public void set(AbstractDescr descr) {
+		// TODO Auto-generated method stub
+		
+	}
 }

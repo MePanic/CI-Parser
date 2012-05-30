@@ -7,6 +7,8 @@ public class SymbolTable {
 	private Map<String, Integer> addressMap = new HashMap<String, Integer>();
 	private Map<String, AbstractDescr> abstractDescrMap = new HashMap<String, AbstractDescr>();
 	private Map<String, Integer> constantMap = new HashMap<String, Integer>();
+	private Map<Integer, Integer> stack = new HashMap<Integer, Integer>();
+	private StringBuilder stackString = new StringBuilder();
 	private int currentAddress = 0;
 	private SymbolTable parentTable;
 
@@ -26,6 +28,10 @@ public class SymbolTable {
 		abstractDescrMap.put(ident, descr);
 		addressMap.put(ident, currentAddress);
 		currentAddress += descr.size();
+	}
+	
+	public void trace(String string){
+		stackString.append(string + "\n");
 	}
 	
 	public void declareVar(String ident, AbstractDescr descr) {
@@ -73,8 +79,9 @@ public class SymbolTable {
 		
 		for(String s : abstractDescrMap.keySet()){
 			System.out.println(abstractDescrMap.get(s).toString(1));
+			
 		}
-		
+		System.out.println(stackString);
 		return "";
 	}
 

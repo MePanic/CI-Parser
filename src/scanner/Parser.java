@@ -991,7 +991,7 @@ public class Parser {
 				printNextSymbol();
 				insymbol();
 				if (isExpression()) {
-					assignment = new AssignmentNode(subject, expression());
+					assignment = new AssignmentNode(subject, expression(),new IdentNode(save.text()));
 				} else
 					error("Expression expected");
 			} else

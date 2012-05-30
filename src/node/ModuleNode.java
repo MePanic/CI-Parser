@@ -36,11 +36,16 @@ public class ModuleNode extends AbstractNode {
 	@Override
 	public AbstractDescr compile(SymbolTable sm) {
 
-		
-		if (ident != null)
+		if (ident != null) {
+			sm.trace("PUSHS, "+ident.name());
+			sm.trace("JMP, "+0);
 			ident.compile(sm);
-		if (declaration != null)
+		}
+		if (declaration != null){
 			declaration.compile(sm);
+			sm.trace("LABLE, "+0);
+			sm.trace("PUSHI, "+sm.size());
+		}	
 		if (statementSequence != null)
 			statementSequence.compile(sm);
 		System.out.println(sm.toString());

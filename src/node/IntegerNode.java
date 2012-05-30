@@ -25,7 +25,7 @@ public class IntegerNode extends AbstractNode {
 
 	@Override
 	public AbstractDescr compile(SymbolTable sm) {
-		return new SimpleTypeDescr("integer");
+		return new SimpleTypeDescr("integer", intVal);
 	}
 
 	@Override
@@ -39,4 +39,10 @@ public class IntegerNode extends AbstractNode {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+//	@Override
+//	public String trace(SymbolTable sm) {
+//		
+//		return "PUSHI, "+intVal;
+//	}
 }

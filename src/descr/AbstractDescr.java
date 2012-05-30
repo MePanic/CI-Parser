@@ -19,6 +19,7 @@ public abstract class AbstractDescr implements Serializable {
 	}
 	
 	public abstract String toString(int lev);
+	public abstract void set(AbstractDescr descr);
 	
 	public String toString(int lev, String string){
         StringBuilder sb = new StringBuilder();

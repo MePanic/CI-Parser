@@ -31,8 +31,8 @@ public class IdentNode extends AbstractNode {
 
 	@Override
 	public AbstractDescr compile(SymbolTable sm, AbstractNode type) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		return sm.AbstractDescrFor(identName);
 	}
 
 	@Override
@@ -40,4 +40,10 @@ public class IdentNode extends AbstractNode {
 		// TODO Auto-generated method stub
 		return 0;
 	}
+
+//	@Override
+//	public String trace(SymbolTable sm) {
+//		// TODO Auto-generated method stub
+//		return "PUSHI, " + sm.addressOf(identName) + "\n";
+//	}
 }
