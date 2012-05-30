@@ -28,7 +28,7 @@ public class SymbolTable {
 	}
 	
 	public void declareVar(String ident, AbstractDescr descr) {
-		AbstractDescrMap.put(ident, new VarDescr(currentAddress, descr));
+		AbstractDescrMap.put(ident, new VarDescr(currentAddress,ident, descr));
 		addressMap.put(ident, currentAddress);
 		currentAddress += descr.size();
 	}
@@ -71,7 +71,7 @@ public class SymbolTable {
 	public String toString(){
 		
 		for(String s : AbstractDescrMap.keySet()){
-			System.out.println(s);
+//			System.out.println(s);
 			System.out.println(AbstractDescrMap.get(s).toString(1));
 		}
 		

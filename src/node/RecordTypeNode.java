@@ -34,7 +34,7 @@ public class RecordTypeNode extends AbstractNode {
 		SymbolTable res = new SymbolTable(sm);
 		for (AbstractNode node : fieldLists) {
 			if (node != null) { 
-//				System.out.println(node.line);
+//				System.out.println(node);
 //				res.declare(node.name(), descr)
 				node.compile(res);
 			}

@@ -19,6 +19,6 @@ public class SimpleTypeDescr extends AbstractDescr {
 	@Override
 	public String toString(int lev){
 		
-		return toString(lev, "SimpleTypeDescr: " + type + " size: "+size+" level: 0");
+		return toString(lev, "SimpleTypeDescr: " + type + " size: "+size+" level: 0\n");
 	}
 }

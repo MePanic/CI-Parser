@@ -31,7 +31,7 @@ public class FieldListNode extends AbstractNode {
 
 	@Override
 	public AbstractDescr compile(SymbolTable sm) {
-		// TODO Auto-generated method stub
+		identList.compile(sm, type);
 		return null;
 	}
 }
