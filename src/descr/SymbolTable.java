@@ -5,7 +5,8 @@ import java.util.*;
 public class SymbolTable {
 
 	private Map<String, Integer> addressMap = new HashMap<String, Integer>();
-	private Map<String, AbstractDescr> AbstractDescrMap = new HashMap<String, AbstractDescr>();
+	private Map<String, AbstractDescr> abstractDescrMap = new HashMap<String, AbstractDescr>();
+	private Map<String, Integer> constantMap = new HashMap<String, Integer>();
 	private int currentAddress = 0;
 	private SymbolTable parentTable;
 
@@ -22,25 +23,25 @@ public class SymbolTable {
 	}
 
 	public void declare(String ident, AbstractDescr descr) {
-		AbstractDescrMap.put(ident, descr);
+		abstractDescrMap.put(ident, descr);
 		addressMap.put(ident, currentAddress);
 		currentAddress += descr.size();
 	}
 	
 	public void declareVar(String ident, AbstractDescr descr) {
-		AbstractDescrMap.put(ident, new VarDescr(currentAddress,ident, descr));
+		abstractDescrMap.put(ident, new VarDescr(currentAddress,ident, descr));
+		addressMap.put(ident, currentAddress);
+		currentAddress += descr.size();
+	}
+	
+	public void declareConst(String ident, AbstractDescr descr) {
+		abstractDescrMap.put(ident, descr);
 		addressMap.put(ident, currentAddress);
 		currentAddress += descr.size();
 	}
 
-	// public void undeclare(String ident){
-	// AbstractDescrMap.remove(ident);
-	// addressMap.remove(ident);
-	//
-	// }
-
 	public AbstractDescr AbstractDescrFor(String ident) {
-		AbstractDescr d = AbstractDescrMap.get(ident);
+		AbstractDescr d = abstractDescrMap.get(ident);
 		if (d == null && parentTable != null) {
 			return parentTable.AbstractDescrFor(ident);
 		}
@@ -48,7 +49,7 @@ public class SymbolTable {
 	}
 
 	public Map<String, AbstractDescr> getAllAbstractDescrs(){
-		return AbstractDescrMap;
+		return abstractDescrMap;
 	}
 	
 	public int addressOf(String ident) {
@@ -70,9 +71,8 @@ public class SymbolTable {
 	@Override
 	public String toString(){
 		
-		for(String s : AbstractDescrMap.keySet()){
-//			System.out.println(s);
-			System.out.println(AbstractDescrMap.get(s).toString(1));
+		for(String s : abstractDescrMap.keySet()){
+			System.out.println(abstractDescrMap.get(s).toString(1));
 		}
 		
 		return "";
