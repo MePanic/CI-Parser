@@ -32,4 +32,22 @@ public class ConstDeclarationNode extends AbstractNode {
 		sm.declare(ident.name(), expression.compile(sm));
 		return null;
 	}
+
+	@Override
+	public AbstractDescr compile(SymbolTable sm, AbstractNode type) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String name() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public int getVal() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 }

@@ -28,4 +28,16 @@ public class IdentNode extends AbstractNode {
 //		System.out.println(toString(0, "IdentNode(" + identName + ")\n"));
 		return new SimpleTypeDescr(identName);
 	}
+
+	@Override
+	public AbstractDescr compile(SymbolTable sm, AbstractNode type) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public int getVal() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 }

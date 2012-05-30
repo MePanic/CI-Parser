@@ -40,4 +40,22 @@ public class IfStatementNode extends AbstractNode {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@Override
+	public AbstractDescr compile(SymbolTable sm, AbstractNode type) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String name() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public int getVal() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 }

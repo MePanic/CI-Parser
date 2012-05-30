@@ -27,4 +27,16 @@ public class IntegerNode extends AbstractNode {
 	public AbstractDescr compile(SymbolTable sm) {
 		return new SimpleTypeDescr("integer");
 	}
+
+	@Override
+	public AbstractDescr compile(SymbolTable sm, AbstractNode type) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String name() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
