@@ -1128,27 +1128,25 @@ public class Parser {
 					insymbol();
 					if (isStatement()) {
 						statementSequence1 = statementSequence();
-						if (isElseIf()) {
-							elseIfs = ifStatement_();
-						}
-						if (isElse()) {
-							printNextSymbol();
-							insymbol();
-							if (isStatement()) {
-								statementSequence2 = statementSequence();
-							} else
-								error("Statement expected");
-						}
-						if (isEnd()) {
-							printNextSymbol();
-							insymbol();
-							ifStatement = new IfStatementNode(expression,
-									statementSequence1, elseIfs,
-									statementSequence2);
-						} else
-							error("'end' expected");
+					}
+					if (isElseIf()) {
+						elseIfs = ifStatement_();
+					}
+					if (isElse()) {
+						printNextSymbol();
+						insymbol();
+						if (isStatement()) {
+							statementSequence2 = statementSequence();
+						} //else error("Statement expected");
+					}
+					if (isEnd()) {
+						printNextSymbol();
+						insymbol();
+						ifStatement = new IfStatementNode(expression,
+								statementSequence1, elseIfs,
+								statementSequence2);
 					} else
-						error("Statement expected");
+						error("'end' expected");
 				} else
 					error("'then' expected");
 			} else
@@ -1172,12 +1170,11 @@ public class Parser {
 					insymbol();
 					if (isStatement()) {
 						statementSequence = statementSequence();
-//						System.out.println(nextSym.text());
-						ifStatementNode = new IfStatementNode(expression,
+					}
+//					System.out.println(nextSym.text());
+					ifStatementNode = new IfStatementNode(expression,
 								statementSequence, isElseIf() ? ifStatement_()
 										: null, null);
-					} else
-						error("Statement expected");
 				} else
 					error("'then' expected");
 			} else
