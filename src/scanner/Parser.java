@@ -96,15 +96,15 @@ public class Parser {
 	}
 
 	public static void printNextSymbol() {
-//		System.out.println(spaces + " -- " + nextSym.id() + " "); /**/
+		System.out.println(spaces + " -- " + nextSym.id() + " ");
 	}
 
 	public static void printThisSymbol(Token t) {
-//		System.out.println(spaces + " -- " + t.id() + " "); /**/
+		System.out.println(spaces + " -- " + t.id() + " ");
 	}
 
 	public static void printFunction(String name) {
-//		System.out.println(spaces + name);/* +": " + nextsymbol);/* */
+		System.out.println(spaces + name);
 	}
 
 	public static String place() {
@@ -121,7 +121,6 @@ public class Parser {
 			while ((nextSym = scanner.yylex()) != null
 					&& nextSym.id().getValue() == BLANK.getValue()) {
 			}
-			// System.out.println(spaces + "insymbol: " + nextSym);
 		} catch (java.io.FileNotFoundException e) {
 			System.out.println("File not found : \"" + inFile + "\"");
 		} catch (java.io.IOException e) {
@@ -319,32 +318,27 @@ public class Parser {
 		return (isIdent() || isIf() || isPrint() || isWhile() || isRepeat());
 	}
 
-	// private static boolean isDeclaration() { return (isConst() || isType() ||
-	// isVar() || isProcedure()); }
-
 	// Parserroutinen
 
 	static StringBuilder program() {
-		StringBuilder res = new StringBuilder();
 		printFunction("Program");
 		indent();
+		StringBuilder res = new StringBuilder();		
 		while (nextSym != null) {
 			if (isModule()) {
 				AbstractNode mod = module();
 				mod.compile(new SymbolTable());
 				res.append(mod.toString(0));
-//				System.out.println(module().toString(0));
 			} else
 				error("unknown Code");
 		}
 		unindent();
-//		System.out.println(res);
 		return res;
 	}
 
-	// Module = �MODULE� ident �;� Declarations
-	// �BEGIN� StatementSequence
-	// �END� ident �
+	// Module = 'MODULE' ident ';' Declarations
+	// 'BEGIN' StatementSequence
+	// 'END' ident '.'.
 	static AbstractNode module() {
 		printFunction("Module");
 		indent();
@@ -394,11 +388,10 @@ public class Parser {
 		return module;
 	}
 
-	// Declarations = [�CONST� ident �=� Expression �;� {ident �=� Expression
-	// �;�}]
-	// [�TYPE� ident �=� Type �;� {ident �=� Type �;�}]
-	// [�VAR� IdentList �:� Type �;� {IdentList �:� Type �;�}]
-	// {ProcedureDeclaration �;�}
+	// Declarations = ['CONST' ident '=' Expression ';' {ident '=' Expression ';'}]
+	// ['TYPE' ident '=' Type ';' {ident '=' Type ';'}]
+	// ['VAR' IdentList ':' Type ';' {IdentList ':' Type ';'}]
+	// {ProcedureDeclaration ';'}.
 	static AbstractNode declarations() {
 		printFunction("Declarations");
 		indent();
@@ -505,7 +498,7 @@ public class Parser {
 	}
 
 	// Expression = SimpleExpression
-	// [(�=� | �#� | �<� | �<=� | �>� | �>=�) SimpleExpression].
+	// [('=' | '#' | '<' | '<=' | '>' | '>=') SimpleExpression].
 	static AbstractNode expression() {
 		printFunction("Expression");
 		indent();
@@ -561,8 +554,8 @@ public class Parser {
 		return print;
 	}
 
-	// SimpleExpression = [�-�] Term
-	// {(�+� | �-�) Term}.
+	// SimpleExpression = ['-'] Term
+	// {('+' | '-') Term}.
 	static AbstractNode simpleExpression() {
 		printFunction("SimpleExpression");
 		AbstractNode simpleExpression = null;
@@ -586,14 +579,14 @@ public class Parser {
 				simpleExpression = new BinOpNode(BinOp.MINUS_OP,
 						simpleExpression, term());
 			} else
-				error("(�+� | �-�) expected");
+				error("('+' | '-') expected");
 		}
 		unindent();
 		return simpleExpression;
 	}
 
 	// Term = Factor
-	// {(�*� | �/�) Factor}.
+	// {('*' | '/') Factor}.
 	static AbstractNode term() {
 		printFunction("Term");
 		indent();
@@ -608,13 +601,13 @@ public class Parser {
 				insymbol();
 				term = new BinOpNode(BinOp.DIV_OP, term, factor());
 			} else
-				error("(�*� | �/�) expected");
+				error("('*' | '/') expected");
 		}
 		unindent();
 		return term;
 	}
 
-	// Factor = Ident Selector | Integer | String | Read | �(� Expression �)�.
+	// Factor = Ident Selector | Integer | String | Read | '(' Expression ')'.
 	static AbstractNode factor() {
 		printFunction("Factor");
 		indent();
@@ -646,69 +639,40 @@ public class Parser {
 		unindent();
 		return factor;
 	}
-
-	// Selector = {�.� ident | �[� Expression �]�}.
-	// static AbstractNode selector(IdentNode subject) {
-	// printFunction("Selector");
-	// indent();
-	// AbstractNode selector = null;
-	// if (isDot() || isLbrac()) {
-	// while (isDot() || isLbrac()) {
-	// if (isDot()) {
-	// printNextSymbol();
-	// insymbol();
-	// selector = new RecordSelectorNode(subject, constIdent());
-	// } else if (isLbrac()) {
-	// printNextSymbol();
-	// insymbol();
-	// selector = new ArraySelectorNode(subject, indexExpression());
-	// if (isRbrac()) {
-	// printNextSymbol();
-	// insymbol();
-	// } else error("']' expected");
-	// }
-	// }
-	// } else error ("('.' | �[�) expected");
-	// unindent();
-	// return selector;
-	// }
-
+	
+	// Selector = {'.' ident | '[' Expression ']'}.
 	static AbstractNode selector(AbstractNode subject) {
 		printFunction("Selector");
 		indent();
-
 		AbstractNode selector = null;
 		if (isDot() || isLbrac()) {
 			while (isDot() || isLbrac()) {
 				if (isDot()) {
 					printNextSymbol();
 					insymbol();
-					if(isDot()){
-					selector = new RecordSelectorNode(selector(subject),
-							constIdent());
+					if (isDot()) {
+						selector = new RecordSelectorNode(selector(subject), constIdent());
 					} else {
 						new RecordSelectorNode(subject, constIdent());
 					}
 				} else if (isLbrac()) {
 					printNextSymbol();
 					insymbol();
-					AbstractNode indExp = indexExpression();
-
+					AbstractNode expression = expression();
 					if (isRbrac()) {
 						printNextSymbol();
 						insymbol();
 						if (isLbrac()) {
-							selector = new ArraySelectorNode(selector(subject),
-									indExp);
+							selector = new ArraySelectorNode(selector(subject), expression);
 						} else {
-							selector = new ArraySelectorNode(subject, indExp);
+							selector = new ArraySelectorNode(subject, expression);
 						}
 					} else
 						error("']' expected");
 				}
 			}
 		} else
-			error("('.' | �[�) expected");
+			error("('.' | '[') expected");
 		unindent();
 		return selector;
 	}
@@ -759,7 +723,7 @@ public class Parser {
 		return type;
 	}
 
-	// ArrayType = �ARRAY� �[� IndexExpression �]� �OF� Type.
+	// ArrayType = 'ARRAY' '[' IndexExpression ']' 'OF' Type.
 	static AbstractNode arrayType() {
 		printFunction("ArrayType");
 		indent();
@@ -798,8 +762,8 @@ public class Parser {
 		return arrayType;
 	}
 
-	// RecordType = �RECORD� FieldList
-	// {�;� FieldList} �END�.
+	// RecordType = 'RECORD' FieldList
+	// {';' FieldList} 'END'.
 	static AbstractNode recordType() {
 		printFunction("RecordType");
 		indent();
@@ -824,7 +788,7 @@ public class Parser {
 		return new RecordTypeNode(fieldLists);
 	}
 
-	// FieldList = [IdentList �:� Type].
+	// FieldList = [IdentList ':' Type].
 	static FieldListNode fieldList() {
 		printFunction("FieldList");
 		indent();
@@ -846,7 +810,7 @@ public class Parser {
 		return fieldList;
 	}
 
-	// IdentList = ident {�,� ident}.
+	// IdentList = ident {',' ident}.
 	static AbstractNode identList() {
 		printFunction("IdentList");
 		indent();
@@ -867,8 +831,8 @@ public class Parser {
 		return new IdentListNode(idents);
 	}
 
-	// Procedure = �PROCEDURE� ident �(� [FormalParameters] �)� �;� Declarations
-	// �BEGIN� StatementSequence �END� ident.
+	// Procedure = 'PROCEDURE' ident '(' [FormalParameters] ')' ';' Declarations
+	// 'BEGIN' StatementSequence 'END' ident.
 	static ProcedureNode procedure() {
 		printFunction("Procedure");
 		indent();
@@ -925,7 +889,7 @@ public class Parser {
 		return procedure;
 	}
 
-	// FormalParameters = FPSection {�;� FPSection}.
+	// FormalParameters = FPSection {';' FPSection}.
 	static FormalParametersNode formalParameters() {
 		printFunction("FormalParameters");
 		indent();
@@ -946,7 +910,7 @@ public class Parser {
 		return new FormalParametersNode(fpsections);
 	}
 
-	// FPSection = [�VAR�] IdentList �:� Type.
+	// FPSection = ['VAR'] IdentList ':' Type.
 	static FpSectionNode fpSection() {
 		printFunction("FPSection");
 		indent();
@@ -973,7 +937,7 @@ public class Parser {
 		return fpSection;
 	}
 
-	// Assignment = ident Selector �:=� Expression.
+	// Assignment = ident Selector ':=' Expression.
 	static AbstractNode assignment(Token save) {
 		printFunction("Assignment");
 		indent();
@@ -991,7 +955,7 @@ public class Parser {
 				printNextSymbol();
 				insymbol();
 				if (isExpression()) {
-					assignment = new AssignmentNode(subject, expression(),new IdentNode(save.text()));
+					assignment = new AssignmentNode(subject, expression(), new IdentNode(save.text()));
 				} else
 					error("Expression expected");
 			} else
@@ -1002,7 +966,7 @@ public class Parser {
 		return assignment;
 	}
 
-	// ProcedureCall = ident �(� [ActualParameters] �)�.
+	// ProcedureCall = ident '(' [ActualParameters] ')'.
 	static AbstractNode procedureCall(Token save) {
 		printFunction("ProcedureCall");
 		indent();
@@ -1033,7 +997,7 @@ public class Parser {
 		return procedureCall;
 	}
 
-	// ActualParameters = Expression {�,� Expression}.
+	// ActualParameters = Expression {',' Expression}.
 	static AbstractNode actualParameters() {
 		printFunction("ActualParameters");
 		indent();
@@ -1054,7 +1018,7 @@ public class Parser {
 		return new ActualParametersNode(expressions);
 	}
 
-	// Statement = [Assignment | ProcedureCall | IfStatement | �PRINT�
+	// Statement = [Assignment | ProcedureCall | IfStatement | 'PRINT'
 	// Expression | WhileStatement | RepeatStatement].
 	static AbstractNode statement() {
 		printFunction("Statement");
@@ -1064,7 +1028,6 @@ public class Parser {
 			statement = repeatStatement();
 		} else if (isIdent()) {
 			Token save = nextSym;
-//			System.out.println(nextSym.text());
 			insymbol();
 			if (isDot() || isLbrac() || isAssign()) {
 				statement = assignment(save);
@@ -1088,7 +1051,7 @@ public class Parser {
 		return statement;
 	}
 
-	// StatementSequence = Statement {�;� Statement}.
+	// StatementSequence = Statement {';' Statement}.
 	static AbstractNode statementSequence() {
 		printFunction("StatementSequence");
 		indent();
@@ -1107,9 +1070,9 @@ public class Parser {
 		return new StatementSequenceNode(statements);
 	}
 
-	// IfStatement = �IF� Expression �THEN� StatementSequence
-	// {�ELSIF� Expression �THEN� StatementSequence}
-	// [�ELSE� StatementSequence] �END�.
+	// IfStatement = 'IF' Expression 'THEN' StatementSequence
+	// {'ELSIF' Expression 'THEN' StatementSequence}
+	// ['ELSE' StatementSequence] 'END'.
 	static IfStatementNode ifStatement() {
 		printFunction("IfStatement");
 		indent();
@@ -1171,7 +1134,6 @@ public class Parser {
 					if (isStatement()) {
 						statementSequence = statementSequence();
 					}
-//					System.out.println(nextSym.text());
 					ifStatementNode = new IfStatementNode(expression,
 								statementSequence, isElseIf() ? ifStatement_()
 										: null, null);
@@ -1184,7 +1146,7 @@ public class Parser {
 		return ifStatementNode;
 	}
 
-	// WhileStatement = �WHILE� Expression �DO� StatementSequence �END�.
+	// WhileStatement = 'WHILE' Expression 'DO' StatementSequence 'END'.
 	static AbstractNode whileStatement() {
 		printFunction("WhileStatement");
 		indent();
@@ -1219,7 +1181,7 @@ public class Parser {
 		return whileStatement;
 	}
 
-	// RepeatStatement = �REPEAT� StatementSequence �UNTIL� Expression.
+	// RepeatStatement = 'REPEAT' StatementSequence 'UNTIL' Expression.
 	static AbstractNode repeatStatement() {
 		printFunction("RepeatStatement");
 		indent();
