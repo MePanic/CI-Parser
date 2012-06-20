@@ -1,0 +1,9 @@
+module m;var a, b : integer;procedure p1(var i, j : integer; k, l : integer);
+var u, v : integer;begin
+a := k;
+b := l;
+u := i + j;
+i := u;end p1;begin
+a := 1;
+b := 2;
+p1(a, b, 3, 4);end m.

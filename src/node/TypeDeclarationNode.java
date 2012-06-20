@@ -1,7 +1,11 @@
 package node;
 
+import java.util.Map;
+
 import descr.AbstractDescr;
-import descr.SymbolTable;
+import descr.TypeDescr;
+
+import static compiler.Compiler.*;
 
 public class TypeDeclarationNode extends AbstractNode {
 
@@ -16,6 +20,22 @@ public class TypeDeclarationNode extends AbstractNode {
     }
     
 	@Override
+	public AbstractDescr compile(Map<Integer, Map<String, AbstractDescr>> symbolTable) {
+		AbstractDescr typeDescr = null;
+		if (type instanceof IdentNode){
+			if (symbolTable.get(level).containsKey(((IdentNode)type).getIdent())) {
+				typeDescr = symbolTable.get(level).get(((IdentNode)type).getIdent());
+			} else {
+				typeDescr = new TypeDescr(1, level, ((IdentNode)ident).getIdent());
+			}
+		} else {
+			typeDescr = type.compile(symbolTable);
+		}
+		symbolTable.get(level).put(((IdentNode)ident).getIdent(), typeDescr);
+		return typeDescr;
+	}
+	
+	@Override
 	public String toString(int indent) {
         StringBuilder sb = new StringBuilder();
         sb.append(toString(indent, "TypeDeclarationNode\n"));
@@ -25,29 +45,5 @@ public class TypeDeclarationNode extends AbstractNode {
         if (type != null)
         	sb.append(type.toString(indent));
         return sb.toString();
-	}
-
-	@Override
-	public AbstractDescr compile(SymbolTable sm) {
-		sm.declare(ident.name(), type.compile(sm));
-		return null;
-	}
-
-	@Override
-	public AbstractDescr compile(SymbolTable sm, AbstractNode type) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public String name() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public int getVal() {
-		// TODO Auto-generated method stub
-		return 0;
 	}
 }

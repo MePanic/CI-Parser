@@ -1,22 +1,19 @@
-package scanner;
+package compiler;
 
-import static scanner.ID.*;
+import static compiler.ID.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import descr.SymbolTable;
+import compiler.Scanner;
+import compiler.Token;
 
 import node.*;
 import node.BinOpNode.BinOp;
 
-import scanner.Scanner;
-import scanner.Token;
 
 public class Parser {
 
-	StringBuilder pars;
-	
 	// Main
 
 	@SuppressWarnings("hiding")
@@ -28,12 +25,32 @@ public class Parser {
 				try {
 					scanner = new Scanner(new java.io.FileReader(argv[i]));
 					insymbol();
-					program();
+					System.out.println(",_____,_____,_____,_____,_____,_____,");
+					System.out.println("|  _  |  _  |  _  |  ___|  ___|  _  |");
+					System.out.println("|  ___|  _  |  _ <|___  |  __||  _ < ");
+					System.out.println("|_|   |_| |_|_| |_|_____|_____|_| |_|");
+					AbstractNode program = program();
+					if (program != null) {
+						System.out.println(",_____,_____,_____,_____,");
+						System.out.println("|_   _|  _  |  ___|  ___|");
+						System.out.println("  | | |  _ <|  __||  __| ");
+						System.out.println("  |_| |_| |_|_____|_____|");
+						System.out.println(program.toString(0));
+						System.out.println(",_____,_____,__ __,_____,_,_,   ,_____,_____,");
+						System.out.println("|  ___|  _  |  V  |  _  | | |   |  ___|  _  |");
+						System.out.println("| |___| |_| | |V| |  ___| | |___|  __||  _ < ");
+						System.out.println("|_____|_____|_| |_|_|   |_|_____|_____|_| |_|");
+						new Compiler(program).compile();
+						System.out.println(",_____,_, ,_,__ __,_____,_____,_,   ,_____,");
+						System.out.println("|  ___| |_| |  V  |  _  |  _  | |   |  ___|");
+						System.out.println("|___  |_   _| |V| |  _ <| |_| | |___|___  |");
+						System.out.println("|_____| |_| |_| |_|_____|_____|_____|_____|");
+						Compiler.printDescrs();
+					}
 				} catch (java.io.FileNotFoundException e) {
 					System.out.println("File not found : \"" + argv[i] + "\"");
 				} catch (java.io.IOException e) {
-					System.out.println("IO error scanning file \"" + argv[i]
-							+ "\"");
+					System.out.println("IO error scanning file \"" + argv[i] + "\"");
 					System.out.println(e);
 				} catch (Exception e) {
 					System.out.println("Unexpected exception:");
@@ -43,33 +60,6 @@ public class Parser {
 		}
 	}
 	
-	public Parser(String argv[]){
-		if (argv.length == 0) {
-			System.out.println("Usage : java Scanner <inputfile>");
-		} else {
-			for (int i = 0; i < argv.length; i++) {
-				try {
-					scanner = new Scanner(new java.io.FileReader(argv[i]));
-					insymbol();
-					pars = program();
-				} catch (java.io.FileNotFoundException e) {
-					System.out.println("File not found : \"" + argv[i] + "\"");
-				} catch (java.io.IOException e) {
-					System.out.println("IO error scanning file \"" + argv[i]
-							+ "\"");
-					System.out.println(e);
-				} catch (Exception e) {
-					System.out.println("Unexpected exception:");
-					e.printStackTrace();
-				}
-			}
-		}
-	}
-	
-	public StringBuilder pars(){
-		return pars;
-	}
-
 	static Token nextSym = null;
 	static String inFile;
 	static Scanner scanner = null;
@@ -96,11 +86,11 @@ public class Parser {
 	}
 
 	public static void printNextSymbol() {
-		System.out.println(spaces + " -- " + nextSym.id() + " ");
+		//System.out.println(spaces + "next: " + nextSym.id() + " ");
 	}
 
 	public static void printThisSymbol(Token t) {
-		System.out.println(spaces + " -- " + t.id() + " ");
+		//System.out.println(spaces + "this: " + t.id() + " ");
 	}
 
 	public static void printFunction(String name) {
@@ -108,7 +98,7 @@ public class Parser {
 	}
 
 	public static String place() {
-		return ("l: " + (nextSym.line() + 1) + ", c:" + (nextSym.column() + 1));
+		return ("line: " + (nextSym.line() + 1) + ", column:" + (nextSym.column() + 1));
 	}
 
 	public static void error(String str) {
@@ -118,9 +108,7 @@ public class Parser {
 
 	public static void insymbol() {
 		try {
-			while ((nextSym = scanner.yylex()) != null
-					&& nextSym.id().getValue() == BLANK.getValue()) {
-			}
+			while ((nextSym = scanner.yylex()) != null && nextSym.id().getValue() == BLANK.getValue()) {}
 		} catch (java.io.FileNotFoundException e) {
 			System.out.println("File not found : \"" + inFile + "\"");
 		} catch (java.io.IOException e) {
@@ -320,20 +308,18 @@ public class Parser {
 
 	// Parserroutinen
 
-	static StringBuilder program() {
+	static AbstractNode program() {
 		printFunction("Program");
 		indent();
-		StringBuilder res = new StringBuilder();		
+		AbstractNode module = null;		
 		while (nextSym != null) {
 			if (isModule()) {
-				AbstractNode mod = module();
-				mod.compile(new SymbolTable());
-				res.append(mod.toString(0));
+				module = module();
 			} else
 				error("unknown Code");
 		}
 		unindent();
-		return res;
+		return module;
 	}
 
 	// Module = 'MODULE' ident ';' Declarations
@@ -366,8 +352,7 @@ public class Parser {
 								printNextSymbol();
 								insymbol();
 								if (isDot()) {
-									module = new ModuleNode(ident,
-											declarations, statementSequence);
+									module = new ModuleNode(ident, declarations, statementSequence);
 									printNextSymbol();
 									insymbol();
 								} else
@@ -506,33 +491,27 @@ public class Parser {
 		if (isEq()) {
 			printNextSymbol();
 			insymbol();
-			expression = new BinOpNode(BinOp.EQ_OP, expression,
-					simpleExpression());
+			expression = new BinOpNode(BinOp.EQ_OP, expression, simpleExpression());
 		} else if (isNeq()) {
 			printNextSymbol();
 			insymbol();
-			expression = new BinOpNode(BinOp.NEQ_OP, expression,
-					simpleExpression());
+			expression = new BinOpNode(BinOp.NEQ_OP, expression, simpleExpression());
 		} else if (isLo()) {
 			printNextSymbol();
 			insymbol();
-			expression = new BinOpNode(BinOp.LO_OP, expression,
-					simpleExpression());
+			expression = new BinOpNode(BinOp.LO_OP, expression, simpleExpression());
 		} else if (isHi()) {
 			printNextSymbol();
 			insymbol();
-			expression = new BinOpNode(BinOp.HI_OP, expression,
-					simpleExpression());
+			expression = new BinOpNode(BinOp.HI_OP, expression, simpleExpression());
 		} else if (isLoEq()) {
 			printNextSymbol();
 			insymbol();
-			expression = new BinOpNode(BinOp.LOEQ_OP, expression,
-					simpleExpression());
+			expression = new BinOpNode(BinOp.LOEQ_OP, expression, simpleExpression());
 		} else if (isHiEq()) {
 			printNextSymbol();
 			insymbol();
-			expression = new BinOpNode(BinOp.HIEQ_OP, expression,
-					simpleExpression());
+			expression = new BinOpNode(BinOp.HIEQ_OP, expression, simpleExpression());
 		}
 		unindent();
 		return expression;
@@ -571,13 +550,11 @@ public class Parser {
 			if (isPlus()) {
 				printNextSymbol();
 				insymbol();
-				simpleExpression = new BinOpNode(BinOp.PLUS_OP,
-						simpleExpression, term());
+				simpleExpression = new BinOpNode(BinOp.PLUS_OP, simpleExpression, term());
 			} else if (isMinus()) {
 				printNextSymbol();
 				insymbol();
-				simpleExpression = new BinOpNode(BinOp.MINUS_OP,
-						simpleExpression, term());
+				simpleExpression = new BinOpNode(BinOp.MINUS_OP, simpleExpression, term());
 			} else
 				error("('+' | '-') expected");
 		}
@@ -606,7 +583,7 @@ public class Parser {
 		unindent();
 		return term;
 	}
-
+	
 	// Factor = Ident Selector | Integer | String | Read | '(' Expression ')'.
 	static AbstractNode factor() {
 		printFunction("Factor");
@@ -615,9 +592,9 @@ public class Parser {
 		if (isIdent()) {
 			IdentNode ident = constIdent();
 			if (isDot() || isLbrac()) {
-				factor = selector(ident);
+				factor = new ContentNode(selector(ident));
 			} else {
-				factor = ident;
+				factor = new ContentNode(ident);
 			}
 		} else if (isInteger()) {
 			factor = integerNode();
@@ -650,29 +627,28 @@ public class Parser {
 				if (isDot()) {
 					printNextSymbol();
 					insymbol();
-					if (isDot()) {
-						selector = new RecordSelectorNode(selector(subject), constIdent());
+					if (selector == null) {
+						selector = new RecordSelectorNode(subject, constIdent());
 					} else {
-						new RecordSelectorNode(subject, constIdent());
+						selector = new RecordSelectorNode(selector, constIdent());
 					}
 				} else if (isLbrac()) {
 					printNextSymbol();
 					insymbol();
-					AbstractNode expression = expression();
+					if (selector == null) {
+						selector = new ArraySelectorNode(subject, expression());
+					} else {
+						selector = new ArraySelectorNode(selector, expression());
+					}
 					if (isRbrac()) {
 						printNextSymbol();
 						insymbol();
-						if (isLbrac()) {
-							selector = new ArraySelectorNode(selector(subject), expression);
-						} else {
-							selector = new ArraySelectorNode(subject, expression);
-						}
 					} else
 						error("']' expected");
 				}
 			}
 		} else
-			error("('.' | '[') expected");
+			error ("('.' | Ô[Ô) expected");
 		unindent();
 		return selector;
 	}
@@ -775,7 +751,9 @@ public class Parser {
 			while (isSemicolon()) {
 				printNextSymbol();
 				insymbol();
-				fieldLists.add(fieldList());
+				FieldListNode fieldList = fieldList();
+				if (fieldList != null)
+					fieldLists.add(fieldList);
 			}
 			if (isEnd()) {
 				printNextSymbol();
@@ -916,9 +894,11 @@ public class Parser {
 		indent();
 		FpSectionNode fpSection = null;
 		AbstractNode identList = null;
+		boolean var = false;
 		if (isVar()) {
 			printNextSymbol();
 			insymbol();
+			var = true;
 		}
 		if (isIdent()) {
 			identList = identList();
@@ -926,7 +906,7 @@ public class Parser {
 				printNextSymbol();
 				insymbol();
 				if (isIdent() || isArray() || isRecord()) {
-					fpSection = new FpSectionNode(identList, type());
+					fpSection = new FpSectionNode(identList, type(), var);
 				} else
 					error("Type expected");
 			} else
@@ -955,7 +935,7 @@ public class Parser {
 				printNextSymbol();
 				insymbol();
 				if (isExpression()) {
-					assignment = new AssignmentNode(subject, expression(), new IdentNode(save.text()));
+					assignment = new AssignmentNode(subject, expression());
 				} else
 					error("Expression expected");
 			} else
@@ -980,13 +960,12 @@ public class Parser {
 				printNextSymbol();
 				insymbol();
 				if (isExpression()) {
-					actualParameters();
+					actualParameters = actualParameters();
 				}
 				if (isRpar()) {
 					printNextSymbol();
 					insymbol();
-					procedureCall = new ProcedureCallNode(ident,
-							actualParameters);
+					procedureCall = new ProcedureCallNode(ident, actualParameters);
 				} else
 					error("')' expected");
 			} else
@@ -1074,13 +1053,15 @@ public class Parser {
 	// {'ELSIF' Expression 'THEN' StatementSequence}
 	// ['ELSE' StatementSequence] 'END'.
 	static IfStatementNode ifStatement() {
+		return ifStatement(false);
+	}
+	
+	static IfStatementNode ifStatement(boolean elseif) {
 		printFunction("IfStatement");
 		indent();
-		IfStatementNode ifStatement = null;
 		AbstractNode expression = null;
-		AbstractNode statementSequence1 = null;
-		AbstractNode statementSequence2 = null;
-		AbstractNode elseIfs = null;
+		AbstractNode thenNode = null;
+		AbstractNode elseNode = null;
 		if (isIf()) {
 			printNextSymbol();
 			insymbol();
@@ -1090,60 +1071,54 @@ public class Parser {
 					printNextSymbol();
 					insymbol();
 					if (isStatement()) {
-						statementSequence1 = statementSequence();
+						thenNode = statementSequence();
 					}
 					if (isElseIf()) {
-						elseIfs = ifStatement_();
-					}
-					if (isElse()) {
+						elseNode = ifStatement(true);
+					} else if (isElse()) {
 						printNextSymbol();
 						insymbol();
 						if (isStatement()) {
-							statementSequence2 = statementSequence();
-						} //else error("Statement expected");
+							elseNode = statementSequence();
+						}
 					}
 					if (isEnd()) {
 						printNextSymbol();
 						insymbol();
-						ifStatement = new IfStatementNode(expression,
-								statementSequence1, elseIfs,
-								statementSequence2);
 					} else
 						error("'end' expected");
 				} else
 					error("'then' expected");
 			} else
 				error("Expression expected");
-		} else
-			error("'if' expected");
-		unindent();
-		return ifStatement;
-	}
-
-	static IfStatementNode ifStatement_() {
-		IfStatementNode ifStatementNode = null;
-		AbstractNode expression = null;
-		AbstractNode statementSequence = null;
-		if (isElseIf()) {
+		} else if (isElseIf()) {
 			printNextSymbol();
 			insymbol();
 			if (isExpression()) {
 				expression = expression();
 				if (isThen()) {
+					printNextSymbol();
 					insymbol();
 					if (isStatement()) {
-						statementSequence = statementSequence();
+						thenNode = statementSequence();
 					}
-					ifStatementNode = new IfStatementNode(expression,
-								statementSequence, isElseIf() ? ifStatement_()
-										: null, null);
+					if (isElseIf()) {
+						elseNode = ifStatement(true);
+					} else if (isElse()) {
+						printNextSymbol();
+						insymbol();
+						if (isStatement()) {
+							elseNode = statementSequence();
+						}
+					}
 				} else
 					error("'then' expected");
 			} else
 				error("Expression expected");
 		} else
-			error("'elseif' expected");
-		return ifStatementNode;
+			error(String.format("%s expected", elseif ? "'elseif'" : "'if'"));
+		unindent();
+		return new IfStatementNode(expression, thenNode, elseNode);
 	}
 
 	// WhileStatement = 'WHILE' Expression 'DO' StatementSequence 'END'.
@@ -1234,6 +1209,7 @@ public class Parser {
 			insymbol();
 		} else
 			error("Integer expected");
+		unindent();
 		return integerNode;
 	}
 
@@ -1261,6 +1237,7 @@ public class Parser {
 				error("Ident expected");
 		} else
 			error("String expected");
+		unindent();
 		return stringNode;
 	}
 
@@ -1271,7 +1248,7 @@ public class Parser {
 		if (isInteger()) {
 			indexExpression = integerNode();
 		} else if (isIdent()) {
-			indexExpression = constIdent();
+			indexExpression = new ContentNode(constIdent());
 		} else
 			error("Integer or Ident expected");
 		unindent();

@@ -1,7 +1,8 @@
 package node;
 
+import java.util.Map;
+
 import descr.AbstractDescr;
-import descr.SymbolTable;
 
 public class FieldListNode extends AbstractNode {
 
@@ -14,6 +15,35 @@ public class FieldListNode extends AbstractNode {
 		this.identList = identList;
 		this.type = type;
 	}
+	
+	public AbstractNode getIdentList() {
+		return identList;
+	}
+
+	public AbstractNode getType() {
+		return type;
+	}
+	
+	@Override
+	public AbstractDescr compile(Map<Integer, Map<String, AbstractDescr>> symbolTable) {
+    	AbstractDescr descr = null;
+		if (type instanceof IdentNode){
+			String s = ((IdentNode)type).getIdent();
+			if (s.equals("integer")) {
+				//descr = new SimpleTypeDescr(Type.INTEGER);
+			} else if (s.equals("boolean")){
+				//descr = new SimpleTypeDescr(Type.BOOLEAN);
+			} else if (s.equals("string")){
+				//descr = new SimpleTypeDescr(Type.STRING);
+			} else {
+				//descr = symbolTable.descriptorFor(s);
+			}
+		} else {
+			descr = type.compile(symbolTable);
+		}
+    	identList.compile(symbolTable, descr);
+    	return null;
+	}
 
 	@Override
 	public String toString(int indent) {
@@ -21,35 +51,9 @@ public class FieldListNode extends AbstractNode {
 		sb.append(toString(indent, "FieldListNode\n"));
 		indent++;
 		if (identList != null)
-//			System.out.println("IDList " + (identList.line+1) + " - " + (identList.column+1));
 			sb.append(identList.toString(indent));
 		if (type != null)
-//			System.out.println("type " + (type.line+1) + " - " + (type.column+1));
 			sb.append(type.toString(indent+1));
 		return sb.toString();
-	}
-
-	@Override
-	public AbstractDescr compile(SymbolTable sm) {
-		identList.compile(sm, type);
-		return null;
-	}
-
-	@Override
-	public AbstractDescr compile(SymbolTable sm, AbstractNode type) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public String name() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public int getVal() {
-		// TODO Auto-generated method stub
-		return 0;
 	}
 }

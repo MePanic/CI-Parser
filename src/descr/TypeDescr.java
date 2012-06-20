@@ -2,22 +2,30 @@ package descr;
 
 public class TypeDescr extends AbstractDescr {
 
-	@Override
-	public int size() {
-		// TODO Auto-generated method stub
-		return 0;
+	private static final long serialVersionUID = 1L;
+	
+	String type;
+	
+	public TypeDescr() {
+		super();
+		this.type = "";
 	}
 
-	@Override
-	public String toString(int lev) {
-		// TODO Auto-generated method stub
-		return null;
+	public TypeDescr(int size, int level, String type) {
+		super(size, level);
+		this.type = type;
 	}
 
-	@Override
-	public void set(AbstractDescr descr) {
-		// TODO Auto-generated method stub
-		
+	public String getType() {
+		return type;
 	}
 
+	public void setType(String type) {
+		this.type = type;
+	}
+	
+	@Override
+	public String toString(int indent) {
+		return toString(indent, "TypeDescr(type: " + type + ", size: " + size + ", level: " + level + ")\n");
+	}
 }

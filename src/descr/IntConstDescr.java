@@ -1,23 +1,22 @@
 package descr;
 
-public class IntConstDescr extends AbstractDescr{
+public class IntConstDescr extends AbstractDescr {
+	
+	private static final long serialVersionUID = 1L;
+	
+	int integer;
 
-	@Override
-	public int size() {
-		// TODO Auto-generated method stub
-		return 0;
+	public IntConstDescr(int level, int integer) {
+		super(1, level);
+		this.integer = integer;
 	}
-
-	@Override
-	public String toString(int lev) {
-		// TODO Auto-generated method stub
-		return null;
+	
+	public int getValue() {
+		return integer;
 	}
-
+	
 	@Override
-	public void set(AbstractDescr descr) {
-		// TODO Auto-generated method stub
-		
+	public String toString(int indent) {
+		return toString(indent, "IntConstDescr(value: " + integer + ", level: " + level + ")\n");
 	}
-
 }

@@ -1,7 +1,11 @@
 package node;
 
+import java.util.Map;
+
 import descr.AbstractDescr;
-import descr.SymbolTable;
+import descr.IntConstDescr;
+
+import static compiler.Compiler.*;
 
 public class NegationNode extends AbstractNode {
 
@@ -13,6 +17,18 @@ public class NegationNode extends AbstractNode {
         this.node = node;
     }
     
+	@Override
+	public AbstractDescr compile(Map<Integer, Map<String, AbstractDescr>> symbolTable) {
+		write("PUSHI, 0");
+		
+		AbstractDescr descr = node.compile(symbolTable);
+    	if (descr instanceof IntConstDescr && node instanceof IntegerNode)
+			write("PUSHI, " + ((IntConstDescr) descr).getValue());
+    	
+    	write("SUB");
+    	return descr;
+	}
+	
     @Override
     public String toString(int indent) {
     	StringBuilder sb = new StringBuilder();
@@ -21,28 +37,4 @@ public class NegationNode extends AbstractNode {
         sb.append(node.toString(indent));
         return sb.toString();
     }
-
-	@Override
-	public AbstractDescr compile(SymbolTable sm) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public AbstractDescr compile(SymbolTable sm, AbstractNode type) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public String name() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public int getVal() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
 }

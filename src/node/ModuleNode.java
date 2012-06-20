@@ -1,21 +1,44 @@
 package node;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import descr.AbstractDescr;
-import descr.SymbolTable;
+import descr.TypeDescr;
+import static compiler.Compiler.*;
 
 public class ModuleNode extends AbstractNode {
 
 	private static final long serialVersionUID = 1L;
 
 	private final AbstractNode ident;
-	private final AbstractNode declaration;
+	private final AbstractNode declarations;
 	private final AbstractNode statementSequence;
 
-	public ModuleNode(AbstractNode ident, AbstractNode declaration,
-			AbstractNode statementSequence) {
+	public ModuleNode(AbstractNode ident, AbstractNode declarations, AbstractNode statementSequence) {
 		this.ident = ident;
-		this.declaration = declaration;
+		this.declarations = declarations;
 		this.statementSequence = statementSequence;
+	}
+	
+	@Override
+	public AbstractDescr compile(Map<Integer, Map<String, AbstractDescr>> symbolTable) {
+		symbolTable.put(level, new HashMap<String, AbstractDescr>());
+		symbolTable.get(level).put("integer", new TypeDescr(1, level, "integer"));
+		symbolTable.get(level).put("boolean", new TypeDescr(1, level, "boolean"));
+		symbolTable.get(level).put("string", new TypeDescr(1, level, "string"));
+		write("PUSHS, " + ((IdentNode)ident).getIdent());
+		int startLabel = newLabel();
+		write("JMP, " + startLabel);
+		declarations.compile(symbolTable);
+		System.out.println("==> start main");
+		write("LABEL, " + startLabel);
+		System.out.println("==> SP := " + address);
+		write("PUSHI, " + (address));
+		write("SETSP");
+		statementSequence.compile(symbolTable);
+		write("STOP");
+		return null;
 	}
 
 	@Override
@@ -26,48 +49,10 @@ public class ModuleNode extends AbstractNode {
 		if (ident != null)
 			sb.append(ident.toString(indent));
 		indent++;
-		if (declaration != null)
-			sb.append(declaration.toString(indent));
+		if (declarations != null)
+			sb.append(declarations.toString(indent));
 		if (statementSequence != null)
 			sb.append(statementSequence.toString(indent));
 		return sb.toString();
 	}
-
-	@Override
-	public AbstractDescr compile(SymbolTable sm) {
-
-		if (ident != null) {
-			sm.trace("PUSHS, "+ident.name());
-			sm.trace("JMP, "+0);
-			ident.compile(sm);
-		}
-		if (declaration != null){
-			declaration.compile(sm);
-			sm.trace("LABLE, "+0);
-			sm.trace("PUSHI, "+sm.size());
-		}	
-		if (statementSequence != null)
-			statementSequence.compile(sm);
-		System.out.println(sm.toString());
-		return null;
-	}
-
-	@Override
-	public AbstractDescr compile(SymbolTable sm, AbstractNode type) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public String name() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public int getVal() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
 }

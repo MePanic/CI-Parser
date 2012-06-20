@@ -1,9 +1,12 @@
 package node;
 
 import java.util.List;
+import java.util.ListIterator;
+import java.util.Map;
 
 import descr.AbstractDescr;
-import descr.SymbolTable;
+import descr.IntConstDescr;
+import static compiler.Compiler.*;
 
 public class ActualParametersNode extends AbstractNode {
 
@@ -16,37 +19,36 @@ public class ActualParametersNode extends AbstractNode {
     }
     
 	@Override
+	public AbstractDescr compile(Map<Integer, Map<String, AbstractDescr>> symbolTable) {
+		System.out.println("==> stack initialize");
+		write("INIT, " + expressions.size());
+		ListIterator<AbstractNode> it = expressions.listIterator(expressions.size());
+		while (it.hasPrevious()) {
+			System.out.println("==> parameter");
+			AbstractNode node = it.previous();
+			
+			AbstractDescr descr = node.compile(symbolTable);
+			if (descr instanceof IntConstDescr && node instanceof IntegerNode)
+				write("PUSHI, " + ((IntConstDescr) descr).getValue());
+			
+			write("GETSP");
+			write("ASSIGN, 1");
+			write("GETSP");
+			write("PUSHI, 1");
+			write("ADD");
+			write("SETSP");
+		}
+		return null;
+	}
+    
+	@Override
 	public String toString(int indent) {
 		StringBuilder sb = new StringBuilder();
         sb.append(toString(indent, "ActualParametersNode\n"));
         indent++;
-        for (int i = 0; i < expressions.size(); i++){
+        for (int i = 0; i < expressions.size(); i++) {
         	sb.append(expressions.get(i).toString(indent));
         }
         return sb.toString();
-	}
-
-	@Override
-	public AbstractDescr compile(SymbolTable sm) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public AbstractDescr compile(SymbolTable sm, AbstractNode type) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public String name() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public int getVal() {
-		// TODO Auto-generated method stub
-		return 0;
 	}
 }

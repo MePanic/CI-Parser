@@ -1,7 +1,10 @@
 package node;
 
+import java.util.Map;
+
 import descr.AbstractDescr;
-import descr.SymbolTable;
+
+import static compiler.Compiler.*;
 
 public class ConstDeclarationNode extends AbstractNode {
 
@@ -16,6 +19,13 @@ public class ConstDeclarationNode extends AbstractNode {
     }
     
 	@Override
+	public AbstractDescr compile(Map<Integer, Map<String, AbstractDescr>> symbolTable) {
+		AbstractDescr constDescr = expression.compile(symbolTable);
+		symbolTable.get(level).put(((IdentNode)ident).getIdent(), constDescr);
+		return constDescr;
+	}
+	
+	@Override
 	public String toString(int indent) {
         StringBuilder sb = new StringBuilder();
         sb.append(toString(indent, "ConstDeclarationNode\n"));
@@ -25,29 +35,5 @@ public class ConstDeclarationNode extends AbstractNode {
         if (expression != null)
         	sb.append(expression.toString(indent));
         return sb.toString();
-	}
-
-	@Override
-	public AbstractDescr compile(SymbolTable sm) {
-		sm.declare(ident.name(), expression.compile(sm));
-		return null;
-	}
-
-	@Override
-	public AbstractDescr compile(SymbolTable sm, AbstractNode type) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public String name() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public int getVal() {
-		// TODO Auto-generated method stub
-		return 0;
 	}
 }

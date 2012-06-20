@@ -1,7 +1,10 @@
 package node;
 
+import java.util.Map;
+
 import descr.AbstractDescr;
-import descr.SymbolTable;
+
+import static compiler.Compiler.*;
 
 public class ReadNode extends AbstractNode {
 
@@ -17,32 +20,14 @@ public class ReadNode extends AbstractNode {
         this.stringNode = stringNode;
     }
     
+	@Override
+	public AbstractDescr compile(Map<Integer, Map<String, AbstractDescr>> symbolTable) {
+		write("READ, " + stringNode.getString());
+		return null;
+	}
+    
     @Override
     public String toString(int indent) {
         return toString(indent, "Read(" + stringNode.toString(0) +")\n");
     }
-
-	@Override
-	public AbstractDescr compile(SymbolTable sm) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public AbstractDescr compile(SymbolTable sm, AbstractNode type) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public String name() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public int getVal() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
 }

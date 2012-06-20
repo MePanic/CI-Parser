@@ -1,24 +1,41 @@
 package node;
 
+import java.util.Map;
+
 import descr.AbstractDescr;
-import descr.SymbolTable;
+
+import static compiler.Compiler.*;
 
 public class IfStatementNode extends AbstractNode {
 
 	private static final long serialVersionUID = 1L;
 
 	private final AbstractNode expression;
-    private final AbstractNode statementSequence1;
-    private final AbstractNode statementSequence2;
-    private final AbstractNode elseIfs;
+    private final AbstractNode thenNode;
+    private final AbstractNode elseNode;
     
-    public IfStatementNode(AbstractNode expression, AbstractNode statementSequence1, AbstractNode elseIfs, AbstractNode statementSequence2){
+    public IfStatementNode(AbstractNode expression, AbstractNode thenNode, AbstractNode elseNode) {
     	this.expression = expression;
-    	this.statementSequence1 = statementSequence1;
-    	this.elseIfs = elseIfs;
-    	this.statementSequence2 = statementSequence2;
+    	this.thenNode = thenNode;
+    	this.elseNode = elseNode;
     }
     
+	@Override
+	public AbstractDescr compile(Map<Integer, Map<String, AbstractDescr>> symbolTable) {
+		int elseLabel = newLabel();
+		int endLabel = newLabel();
+		expression.compile(symbolTable);
+		write("BF, " + elseLabel);
+		if (thenNode != null)
+			thenNode.compile(symbolTable);
+		write("JMP, " + endLabel);
+		write("LABEL, " + elseLabel);
+		if (elseNode != null)
+			elseNode.compile(symbolTable);
+		write("LABEL, " + endLabel);
+		return null;
+	}
+	
 	@Override
 	public String toString(int indent) {
         StringBuilder sb = new StringBuilder();
@@ -26,36 +43,10 @@ public class IfStatementNode extends AbstractNode {
         indent++;
         if (expression != null)
         	sb.append(expression.toString(indent));
-        if (statementSequence1 != null)
-        	sb.append(statementSequence1.toString(indent));
-        if (elseIfs != null)
-        	sb.append(elseIfs.toString(indent));
-        if (statementSequence2 != null)
-        	sb.append(statementSequence2.toString(indent));
+        if (thenNode != null)
+        	sb.append(thenNode.toString(indent));
+        if (elseNode != null)
+        	sb.append(elseNode.toString(indent));
         return sb.toString();
-	}
-
-	@Override
-	public AbstractDescr compile(SymbolTable sm) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public AbstractDescr compile(SymbolTable sm, AbstractNode type) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public String name() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public int getVal() {
-		// TODO Auto-generated method stub
-		return 0;
 	}
 }

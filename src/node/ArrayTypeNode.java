@@ -1,8 +1,13 @@
 package node;
 
+import java.util.Map;
+
 import descr.AbstractDescr;
 import descr.ArrayDescr;
-import descr.SymbolTable;
+import descr.IntConstDescr;
+import descr.TypeDescr;
+
+import static compiler.Compiler.*;
 
 public class ArrayTypeNode extends AbstractNode {
 
@@ -15,6 +20,23 @@ public class ArrayTypeNode extends AbstractNode {
 		this.indexExpression = indexExpression;
 		this.type = type;
 	}
+	
+	@Override
+	public AbstractDescr compile(Map<Integer, Map<String, AbstractDescr>> symbolTable) {
+		AbstractDescr indexDescr = indexExpression.compile(symbolTable);
+		AbstractDescr typeDescr = null;
+		if (type instanceof IdentNode) {
+			typeDescr = getDescr(level, ((IdentNode) type).getIdent(), symbolTable);
+			if (typeDescr == null) {
+				typeDescr = new TypeDescr(1, level, ((IdentNode) type).getIdent());
+			}
+		} else {
+			typeDescr = type.compile(symbolTable);
+		}
+		int numberOfElems = ((IntConstDescr) indexDescr).getValue();
+		int size = numberOfElems * typeDescr.getSize();
+		return new ArrayDescr(numberOfElems, size, typeDescr);
+	}
 
 	@Override
 	public String toString(int indent) {
@@ -26,35 +48,5 @@ public class ArrayTypeNode extends AbstractNode {
 		if (type != null)
 			sb.append(type.toString(indent));
 		return sb.toString();
-	}
-
-	@Override
-	public AbstractDescr compile(SymbolTable sm) {
-//		System.out.println("hi");
-		try {
-			return new ArrayDescr(indexExpression.getVal(), type.compile(sm));
-		} catch (java.lang.Error e) {
-//			return new ArrayDescr(sm.AbstractDescrFor(indexExpression.name()),
-//					4, type.compile(sm));
-			return new ArrayDescr(10, type.compile(sm));
-		}
-	}
-
-	@Override
-	public AbstractDescr compile(SymbolTable sm, AbstractNode type) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public String name() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public int getVal() {
-		// TODO Auto-generated method stub
-		return 0;
 	}
 }

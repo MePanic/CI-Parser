@@ -1,7 +1,10 @@
 package node;
 
 import java.io.Serializable;
-import scanner.Parser;
+import java.util.Map;
+
+import compiler.Parser;
+
 import descr.*;
 
 public abstract class AbstractNode implements Serializable {
@@ -15,15 +18,15 @@ public abstract class AbstractNode implements Serializable {
 		column = Parser.getColumn();
 	}
 	
-//	public abstract String name();
-
+	public AbstractDescr compile(Map<Integer, Map<String, AbstractDescr>> symbolTable) {
+		return null;
+	}
+	
+	public AbstractDescr compile(Map<Integer, Map<String, AbstractDescr>> symbolTable, AbstractDescr descr) {
+		return null;
+	}
+	
 	public abstract String toString(int indent);
-	
-	public abstract AbstractDescr compile(SymbolTable sm);
-	public abstract AbstractDescr compile(SymbolTable sm, AbstractNode type);
-	
-	public abstract String name();
-	public abstract int getVal();
 	
 	protected String toString(int indent, String string) {
         StringBuilder sb = new StringBuilder();
@@ -33,7 +36,4 @@ public abstract class AbstractNode implements Serializable {
         sb.append(string);
         return sb.toString();
 	}
-	
-//	public abstract String trace(SymbolTable sm);
 }
-

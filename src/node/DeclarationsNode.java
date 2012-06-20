@@ -1,9 +1,12 @@
 package node;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import descr.AbstractDescr;
-import descr.SymbolTable;
+
+import static compiler.Compiler.*;
 
 public class DeclarationsNode extends AbstractNode {
 
@@ -13,7 +16,8 @@ public class DeclarationsNode extends AbstractNode {
 	private final List<? extends AbstractNode> types;
 	private final List<? extends AbstractNode> vars;
 	private final List<? extends AbstractNode> procedures;
-
+	int memorySize;
+	
 	public DeclarationsNode(List<? extends AbstractNode> consts, List<? extends AbstractNode> types, List<? extends AbstractNode> vars, List<? extends AbstractNode> procedures) {
 		this.consts = consts;
 		this.types = types;
@@ -22,57 +26,33 @@ public class DeclarationsNode extends AbstractNode {
 	}
 	
 	@Override
+	public AbstractDescr compile(Map<Integer, Map<String, AbstractDescr>> symbolTable) {
+		if (symbolTable.get(level) == null)
+			symbolTable.put(level, new HashMap<String, AbstractDescr>());
+		for (AbstractNode constNode : consts)
+			constNode.compile(symbolTable);
+		for (AbstractNode typeNode : types)
+			typeNode.compile(symbolTable);
+		for (AbstractNode varNode : vars)
+			varNode.compile(symbolTable);
+		for (AbstractNode procNode : procedures)
+			procNode.compile(symbolTable);
+		return null;
+	}
+	
+	@Override
 	public String toString(int indent) {
 		StringBuilder sb = new StringBuilder();
 		sb.append(toString(indent, "DeclarationsNode\n"));
 		indent++;
-		for (int i = 0; i < consts.size(); i++) {
+		for (int i = 0; i < consts.size(); i++)
 			sb.append(consts.get(i).toString(indent));
-		}
-		for (int i = 0; i < types.size(); i++) {
+		for (int i = 0; i < types.size(); i++)
 			sb.append(types.get(i).toString(indent));
-		}
-		for (int i = 0; i < vars.size(); i++) {
+		for (int i = 0; i < vars.size(); i++)
 			sb.append(vars.get(i).toString(indent));
-		}
-		for (int i = 0; i < procedures.size(); i++) {
+		for (int i = 0; i < procedures.size(); i++)
 			sb.append(procedures.get(i).toString(indent));
-		}
 		return sb.toString();
-	}
-
-	@Override
-	public AbstractDescr compile(SymbolTable sm) {
-		for (int i = 0; i < consts.size(); i++) {
-			consts.get(i).compile(sm);
-		}
-		for (int i = 0; i < types.size(); i++) {
-			types.get(i).compile(sm);
-		}
-		for (int i = 0; i < vars.size(); i++) {
-			vars.get(i).compile(sm);
-		}
-		for (int i = 0; i < procedures.size(); i++) {
-			procedures.get(i).compile(sm);
-		}
-		return null;
-	}
-
-	@Override
-	public AbstractDescr compile(SymbolTable sm, AbstractNode type) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public String name() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public int getVal() {
-		// TODO Auto-generated method stub
-		return 0;
 	}
 }

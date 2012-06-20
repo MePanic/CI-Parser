@@ -1,7 +1,10 @@
 package node;
 
+import java.util.Map;
+
 import descr.AbstractDescr;
-import descr.SymbolTable;
+import descr.ProcDescr;
+import static compiler.Compiler.*;
 
 public class ProcedureCallNode extends AbstractNode {
 
@@ -16,6 +19,15 @@ public class ProcedureCallNode extends AbstractNode {
 	}
 	
 	@Override
+	public AbstractDescr compile(Map<Integer, Map<String, AbstractDescr>> symbolTable) {
+		ProcDescr descr = (ProcDescr) getDescr(level, ident.getIdent(), symbolTable);
+		if (actualParameters != null)
+			actualParameters.compile(symbolTable);
+		write("CALL, " + descr.getStart());
+		return null;
+	}
+	
+	@Override
 	public String toString(int indent) {
         StringBuilder sb = new StringBuilder();
         sb.append(toString(indent, "ProcedureCallNode\n"));
@@ -25,29 +37,5 @@ public class ProcedureCallNode extends AbstractNode {
         if (actualParameters != null)
         	sb.append(actualParameters.toString(indent));
         return sb.toString();
-	}
-
-	@Override
-	public AbstractDescr compile(SymbolTable sm) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public AbstractDescr compile(SymbolTable sm, AbstractNode type) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public String name() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public int getVal() {
-		// TODO Auto-generated method stub
-		return 0;
 	}
 }

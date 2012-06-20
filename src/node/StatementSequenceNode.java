@@ -1,9 +1,9 @@
 package node;
 
 import java.util.List;
+import java.util.Map;
 
 import descr.AbstractDescr;
-import descr.SymbolTable;
 
 public class StatementSequenceNode extends AbstractNode {
 
@@ -16,41 +16,20 @@ public class StatementSequenceNode extends AbstractNode {
 	}
 	
 	@Override
+	public AbstractDescr compile(Map<Integer, Map<String, AbstractDescr>> symbolTable) {
+		for(AbstractNode statement : statements)
+			statement.compile(symbolTable);
+		return null;
+	}
+	
+	@Override
 	public String toString(int indent) {
         StringBuilder sb = new StringBuilder();
-        sb.append(toString(indent, "StatementSequence\n"));
+        sb.append(toString(indent, "StatementSequenceNode\n"));
         indent++;
-        for (int i = 0; i < statements.size(); i++){
+        for (int i = 0; i < statements.size(); i++)
         	if (statements.get(i) != null)
         		sb.append(statements.get(i).toString(indent));
-        }
         return sb.toString();
-	}
-
-	@Override
-	public AbstractDescr compile(SymbolTable sm) {
-        for (int i = 0; i < statements.size(); i++){
-        	if (statements.get(i) != null)
-        		statements.get(i).compile(sm);
-        }
-		return null;
-	}
-
-	@Override
-	public AbstractDescr compile(SymbolTable sm, AbstractNode type) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public String name() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public int getVal() {
-		// TODO Auto-generated method stub
-		return 0;
 	}
 }

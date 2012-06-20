@@ -1,7 +1,10 @@
 package node;
 
+import java.util.Map;
+
 import descr.AbstractDescr;
-import descr.SymbolTable;
+
+import static compiler.Compiler.*;
 
 public class RepeatStatementNode extends AbstractNode {
 
@@ -16,6 +19,16 @@ public class RepeatStatementNode extends AbstractNode {
     }
     
 	@Override
+	public AbstractDescr compile(Map<Integer, Map<String, AbstractDescr>> symbolTable) {
+		int start = newLabel();
+		write("LABEL, " + start);
+		statementSequence.compile(symbolTable);
+		expression.compile(symbolTable);
+		write("BF, " + start);
+		return null;
+	}
+	
+	@Override
 	public String toString(int indent) {
         StringBuilder sb = new StringBuilder();
         sb.append(toString(indent, "RepeatStatement\n"));
@@ -25,29 +38,5 @@ public class RepeatStatementNode extends AbstractNode {
         if (expression != null)
         	sb.append(expression.toString(indent));
         return sb.toString();
-	}
-
-	@Override
-	public AbstractDescr compile(SymbolTable sm) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public AbstractDescr compile(SymbolTable sm, AbstractNode type) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public String name() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public int getVal() {
-		// TODO Auto-generated method stub
-		return 0;
 	}
 }

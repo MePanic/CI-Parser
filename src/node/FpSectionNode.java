@@ -1,7 +1,13 @@
 package node;
 
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
 import descr.AbstractDescr;
-import descr.SymbolTable;
+import descr.ProcDescr;
+import descr.VarDescr;
+import static compiler.Compiler.*;
 
 public class FpSectionNode extends AbstractNode {
 
@@ -9,16 +15,31 @@ public class FpSectionNode extends AbstractNode {
 
     private final AbstractNode identList;
     private final AbstractNode type;
+    private final boolean isVar;
     
-    public FpSectionNode(AbstractNode identList, AbstractNode type) {
+    public FpSectionNode(AbstractNode identList, AbstractNode type, boolean isVar) {
         this.identList = identList;
         this.type = type;
+        this.isVar = isVar;
     }
     
+	@Override
+	public AbstractDescr compile(Map<Integer, Map<String, AbstractDescr>> symbolTable) {
+		List<AbstractDescr> list = new LinkedList<AbstractDescr>();
+		AbstractDescr typeDescr = type.compile(symbolTable);
+		for (IdentNode ident : ((IdentListNode) identList).getIdents()) {
+			address -= typeDescr.getSize();
+			AbstractDescr varDescr = new VarDescr(level, address, typeDescr, isVar);
+			list.add(varDescr);
+			symbolTable.get(level).put(ident.getIdent(), varDescr);
+		}
+		return new ProcDescr("", 0, 0, 0, list); // nur für die Übergabe der Liste
+	}
+	
     @Override
     public String toString(int indent) {
         StringBuilder sb = new StringBuilder();
-        sb.append(toString(indent, "FPSectionNode\n"));
+        sb.append(toString(indent, "FPSectionNode (var: " + isVar + ")\n"));
 		indent++;
         if (identList != null)
 			sb.append(identList.toString(indent));
@@ -26,28 +47,4 @@ public class FpSectionNode extends AbstractNode {
         	sb.append(type.toString(indent));
 		return sb.toString();
     }
-
-	@Override
-	public AbstractDescr compile(SymbolTable sm) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public AbstractDescr compile(SymbolTable sm, AbstractNode type) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public String name() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public int getVal() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
 }

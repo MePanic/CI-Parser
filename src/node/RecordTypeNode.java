@@ -1,10 +1,15 @@
 package node;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import descr.AbstractDescr;
 import descr.RecordDescr;
-import descr.SymbolTable;
+import descr.TypeDescr;
+import descr.VarDescr;
+
+import static compiler.Compiler.*;
 
 public class RecordTypeNode extends AbstractNode {
 
@@ -17,6 +22,31 @@ public class RecordTypeNode extends AbstractNode {
 	}
 
 	@Override
+	public AbstractDescr compile(Map<Integer, Map<String, AbstractDescr>> symbolTable) {
+		Map<String, AbstractDescr> map = new HashMap<String,AbstractDescr>();
+		int size = 0;
+		int address = 0;
+		for (AbstractNode fieldList : fieldLists) {
+			AbstractDescr typeDescr = null;
+			AbstractNode type = ((FieldListNode)fieldList).getType();
+			if (type instanceof IdentNode) {
+				typeDescr = getDescr(level, ((IdentNode) type).getIdent(), symbolTable);
+				if (typeDescr == null) {
+					typeDescr = new TypeDescr(1, level, ((IdentNode)type).getIdent());
+				}
+			} else {
+				typeDescr = type.compile(symbolTable);
+			}
+			for (AbstractNode ident : ((IdentListNode)((FieldListNode)fieldList).getIdentList()).getIdents()) {
+				map.put(((IdentNode)ident).getIdent(), new VarDescr(level, address, typeDescr, false));
+				address += typeDescr.getSize();
+				size += typeDescr.getSize();
+			}
+		}
+		return new RecordDescr(size, map);
+	}
+	
+	@Override
 	public String toString(int indent) {
 		StringBuilder sb = new StringBuilder();
 		sb.append(toString(indent, "RecordTypeNode\n"));
@@ -27,36 +57,5 @@ public class RecordTypeNode extends AbstractNode {
 			}
 		}
 		return sb.toString();
-	}
-
-	@Override
-	public AbstractDescr compile(SymbolTable sm) {
-		SymbolTable res = new SymbolTable(sm);
-		for (AbstractNode node : fieldLists) {
-			if (node != null) { 
-//				System.out.println(node);
-//				res.declare(node.name(), descr)
-				node.compile(res);
-			}
-		}
-		return new RecordDescr(res.size(), res);
-	}
-
-	@Override
-	public AbstractDescr compile(SymbolTable sm, AbstractNode type) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public String name() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public int getVal() {
-		// TODO Auto-generated method stub
-		return 0;
 	}
 }

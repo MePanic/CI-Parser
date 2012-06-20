@@ -1,45 +1,46 @@
 package descr;
 
-import java.util.*;
-
 public class ArrayDescr extends AbstractDescr {
 
 	private static final long serialVersionUID = 1L;
-	int numberelems;
-	AbstractDescr basetype;
-	List<AbstractDescr> content = new ArrayList<AbstractDescr>();
 
-	public ArrayDescr(int fn, AbstractDescr fb) {
-		numberelems = fn;
-		basetype = fb;
-		size = numberelems * basetype.size();
-	}
-	
-	public AbstractDescr get(int i){
-		return content.get(i);
-	}
-	
-	public void set(AbstractDescr descr){
-		
-	}
-	
-	public void set(int i, AbstractDescr descr){
-		content.set(i,descr);
+	int numberElems;
+	AbstractDescr baseType;
+
+	public ArrayDescr() {
+		numberElems = 0;
+		size = 0;
+		baseType = null;
 	}
 
-	public String toString(int lev){
+	public ArrayDescr(int fn, int fs, AbstractDescr fb) {
+		numberElems = fn;
+		size = fs;
+		baseType = fb;
+	}
 
+	public void setNumberelems(int fn) {
+		numberElems = fn;
+	}
+
+	public void setBasetype(AbstractDescr fb) {
+		baseType = fb;
+	}
+
+	public int getNumberelems() {
+		return numberElems;
+	}
+
+	public AbstractDescr getBasetype() {
+		return baseType;
+	}
+	
+	@Override
+	public String toString(int indent) {
 		StringBuilder sb = new StringBuilder();
-		sb.append(toString(lev,"ArrayDescr: numberelems: "+numberelems+" size: "+size + "\n"));
-		lev++;
-	
-		sb.append(basetype.toString(lev));
-	
+		sb.append(toString(indent, "ArrayDescr(numberElems: " + numberElems + ", size: " + size + ")\n"));
+		indent++;
+		sb.append(baseType.toString(indent));
 		return sb.toString();
 	}
-
-	public int size() {
-		return this.size;
-	}
-
 }

@@ -1,48 +1,32 @@
 package node;
 
+import java.util.Map;
+
 import descr.AbstractDescr;
-import descr.SimpleTypeDescr;
-import descr.SymbolTable;
+import descr.IntConstDescr;
+import static compiler.Compiler.*;
 
 public class IntegerNode extends AbstractNode {
 
 	private static final long serialVersionUID = 1L;
 
-    private final int intVal;
+    private final int integer;
 
-    public IntegerNode(int val) {
-        intVal = val;
+    public IntegerNode(int integer) {
+        this.integer = integer;
     }
     
-    public int getVal(){
-    	return this.intVal;
+    public int getInteger() {
+    	return integer;
     }
+    
+	@Override
+	public AbstractDescr compile(Map<Integer, Map<String, AbstractDescr>> symbolTable) {
+		return new IntConstDescr(level, integer);
+	}
     
     @Override
     public String toString(int indent) {
-        return toString(indent, "IntNode(" + intVal + ")\n");
+        return toString(indent, "IntNode(" + integer + ")\n");
     }
-
-	@Override
-	public AbstractDescr compile(SymbolTable sm) {
-		return new SimpleTypeDescr("integer", intVal);
-	}
-
-	@Override
-	public AbstractDescr compile(SymbolTable sm, AbstractNode type) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public String name() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-//	@Override
-//	public String trace(SymbolTable sm) {
-//		
-//		return "PUSHI, "+intVal;
-//	}
 }

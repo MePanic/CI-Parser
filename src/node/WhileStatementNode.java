@@ -1,7 +1,10 @@
 package node;
 
+import java.util.Map;
+
 import descr.AbstractDescr;
-import descr.SymbolTable;
+
+import static compiler.Compiler.*;
 
 public class WhileStatementNode extends AbstractNode {
 
@@ -16,6 +19,19 @@ public class WhileStatementNode extends AbstractNode {
     }
     
 	@Override
+	public AbstractDescr compile(Map<Integer, Map<String, AbstractDescr>> symbolTable) {
+		int start = newLabel();
+		int end = newLabel();
+		write("LABEL, " + start);
+		expression.compile(symbolTable);
+		write("BF, "+ end);
+		statementSequence.compile(symbolTable);
+		write("JMP, " + start);
+		write("LABEL, " + end);
+		return null;
+	}
+    
+	@Override
 	public String toString(int indent) {
         StringBuilder sb = new StringBuilder();
         sb.append(toString(indent, "WhileStatement\n"));
@@ -25,29 +41,5 @@ public class WhileStatementNode extends AbstractNode {
         if (statementSequence != null)
         	sb.append(statementSequence.toString(indent));
         return sb.toString();
-	}
-
-	@Override
-	public AbstractDescr compile(SymbolTable sm) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public AbstractDescr compile(SymbolTable sm, AbstractNode type) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public String name() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public int getVal() {
-		// TODO Auto-generated method stub
-		return 0;
 	}
 }

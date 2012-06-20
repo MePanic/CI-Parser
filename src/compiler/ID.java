@@ -1,4 +1,4 @@
-package scanner;
+package compiler;
 
 public enum ID {
 	MUL(256),PLUS(257),MINUS(258),DIV(259),ASSIGN(260),EQ(261),NEQ(262),LO(263),DO(295),

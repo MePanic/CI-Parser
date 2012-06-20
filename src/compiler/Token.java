@@ -1,6 +1,7 @@
-package scanner;
+package compiler;
 
 class Token {
+	
 	private ID id;
 	private int line, column;
 	private String text;
@@ -10,12 +11,12 @@ class Token {
 		this.text = text;
 		this.line = line;
 		this.column = column;
-		
-
 	}
 	
 	@Override
-	public String toString() {return "Token(" + text + ",ID:" + id + "," + line + "," + column + ")";}
+	public String toString() {
+		return "Token(" + text + ", ID: " + id + "," + line + "," + column + ")";
+	}
 
 	public ID id() { return id; }
 	public String text() { return text; }

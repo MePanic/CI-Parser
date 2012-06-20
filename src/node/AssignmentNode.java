@@ -1,7 +1,10 @@
 package node;
 
+import java.util.Map;
+
 import descr.AbstractDescr;
-import descr.SymbolTable;
+import descr.IntConstDescr;
+import static compiler.Compiler.*;
 
 public class AssignmentNode extends AbstractNode {
 
@@ -9,14 +12,24 @@ public class AssignmentNode extends AbstractNode {
 
 	private final AbstractNode subject;
 	private final AbstractNode expression;
-	private final AbstractNode idNote;
-
-	public AssignmentNode(AbstractNode subject, AbstractNode expression, AbstractNode idNote) {
+	
+	public AssignmentNode(AbstractNode subject, AbstractNode expression) {
 		this.subject = subject;
 		this.expression = expression;
-		this.idNote = idNote;
 	}
 
+	@Override
+	public AbstractDescr compile(Map<Integer, Map<String, AbstractDescr>> symbolTable) {
+		AbstractDescr descr = expression.compile(symbolTable);
+		
+	    if (descr instanceof IntConstDescr && expression instanceof IntegerNode)
+	    	write("PUSHI, " + ((IntConstDescr) descr).getValue());
+	    	
+	    subject.compile(symbolTable);
+		write("ASSIGN, " + descr.getSize());
+	    return null;
+	}
+	
 	@Override
 	public String toString(int indent) {
 		StringBuilder sb = new StringBuilder();
@@ -27,38 +40,5 @@ public class AssignmentNode extends AbstractNode {
 		if (expression != null)
 			sb.append(expression.toString(indent));
 		return sb.toString();
-	}
-
-	@Override
-	public AbstractDescr compile(SymbolTable sm) {
-		if (subject != null && expression != null) {
-//			System.out.println("------" + idNote.name());
-//			System.out.println(subject);
-//			System.out.println(expression + "-");
-//			subject.compile(sm, idNote).set(expression.compile(sm));
-//			sm.trace(expression.trace(sm));
-			
-			
-		}
-
-		return null;
-	}
-
-	@Override
-	public AbstractDescr compile(SymbolTable sm, AbstractNode type) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public String name() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public int getVal() {
-		// TODO Auto-generated method stub
-		return 0;
 	}
 }

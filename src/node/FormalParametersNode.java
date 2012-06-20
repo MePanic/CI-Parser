@@ -1,9 +1,9 @@
 package node;
 
 import java.util.List;
+import java.util.Map;
 
 import descr.AbstractDescr;
-import descr.SymbolTable;
 
 public class FormalParametersNode extends AbstractNode {
 
@@ -15,6 +15,15 @@ public class FormalParametersNode extends AbstractNode {
     	this.fpsections = fpsections;
     }
 	
+	public List<FpSectionNode> getFpSections() {
+		return fpsections;
+	}
+	
+	@Override
+	public AbstractDescr compile(Map<Integer, Map<String, AbstractDescr>> symbolTable) {
+		return null;
+	}
+	
     @Override
     public String toString(int indent) {
         StringBuilder sb = new StringBuilder();
@@ -25,28 +34,4 @@ public class FormalParametersNode extends AbstractNode {
         }
         return sb.toString();
     }
-
-	@Override
-	public AbstractDescr compile(SymbolTable sm) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public AbstractDescr compile(SymbolTable sm, AbstractNode type) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public String name() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public int getVal() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
 }

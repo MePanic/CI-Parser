@@ -3,27 +3,42 @@ package descr;
 import java.io.Serializable;
 
 public abstract class AbstractDescr implements Serializable {
+
 	private static final long serialVersionUID = 1L;
+
 	protected int size;
 	protected int level;
 
+	public AbstractDescr(int size, int level) {
+		this.size = size;
+		this.level = level;
+	}
+
 	public AbstractDescr() {
 		this.size = 0;
-		// this.level = CodeGen.level;
 	}
 	
-	public abstract int size();
-
 	public int getLevel() {
 		return level;
 	}
+
+	//public void setLevel(int level) {
+	//	this.level = level;
+	//}
+
+	public int getSize() {
+		return size;
+	}	
 	
-	public abstract String toString(int lev);
-	public abstract void set(AbstractDescr descr);
+	//public void setSize(int fs) {
+	//	size = fs;
+	//}
 	
-	public String toString(int lev, String string){
+	public abstract String toString(int indent);
+	
+	protected String toString(int indent, String string) {
         StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < lev; ++i) {
+        for (int i = 0; i < indent; ++i) {
             sb.append("  ");
         }
         sb.append(string);

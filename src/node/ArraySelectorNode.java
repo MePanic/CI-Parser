@@ -1,7 +1,13 @@
 package node;
 
+import java.util.Map;
+
 import descr.AbstractDescr;
-import descr.SymbolTable;
+import descr.ArrayDescr;
+import descr.IntConstDescr;
+import descr.VarDescr;
+
+import static compiler.Compiler.*;
 
 public class ArraySelectorNode extends AbstractNode {
 
@@ -15,55 +21,51 @@ public class ArraySelectorNode extends AbstractNode {
         this.selector = selector;
     }
     
+	@Override
+	public AbstractDescr compile(Map<Integer, Map<String, AbstractDescr>> symbolTable) {
+    	AbstractDescr descr = null;
+		ArrayDescr arrayDescr = null;
+    	int typeSize = 0;
+    	if (subject instanceof IdentNode) {
+    		arrayDescr = (ArrayDescr)((VarDescr) getDescr(level, ((IdentNode)subject).getIdent(), symbolTable)).getType();
+    		typeSize = arrayDescr.getBasetype().getSize();
+    		subject.compile(symbolTable);
+    		
+    		AbstractDescr selectorDescr = selector.compile(symbolTable);
+    		if (selectorDescr instanceof IntConstDescr && selector instanceof IntegerNode)
+    			write("PUSHI, " + ((IntConstDescr) selectorDescr).getValue());
+    		
+    		write("PUSHI, " + typeSize);
+    		write("MUL");
+    		write("ADD");
+    		descr = arrayDescr.getBasetype();
+    	} else if (subject instanceof ArraySelectorNode || subject instanceof RecordSelectorNode) {
+    		arrayDescr = (ArrayDescr) subject.compile(symbolTable);
+    		typeSize = arrayDescr.getBasetype().getSize();
+    		
+    		AbstractDescr selectorDescr = selector.compile(symbolTable);
+    		if (selectorDescr instanceof IntConstDescr && selector instanceof IntegerNode)
+    			write("PUSHI, " + ((IntConstDescr) selectorDescr).getValue());
+    		
+    		write("PUSHI, " + typeSize);
+    		write("MUL");
+    		write("ADD");
+    		descr = arrayDescr.getBasetype();
+    	} else {
+    		System.out.println("ArraySelectorNodeError: " + subject);
+    	}
+    	return descr;
+	}
+	
     @Override
     public String toString(int indent) {
     	StringBuilder sb = new StringBuilder();
     	sb.append(toString(indent, "ArraySelectorNode\n"));
     	indent++;
-    	sb.append(subject.toString(indent));
-    	sb.append(selector.toString(indent));
+    	if (subject != null)
+    		sb.append(subject.toString(indent));
+    	if (selector != null)
+    		sb.append(selector.toString(indent));
     	return sb.toString();
     }
-
-	@Override
-	public AbstractDescr compile(SymbolTable sm) {
-		
-		System.out.println(subject);
-		System.out.println(selector.getVal() + "--");
-		return null;
-	}
-
-	@Override
-	public AbstractDescr compile(SymbolTable sm, AbstractNode type) {
-		System.out.println(subject);
-		System.out.println(selector.getVal() + "--");
-		return null;
-	}
-
-	@Override
-	public String name() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public int getVal() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-//	@Override
-//	public String trace(SymbolTable sm) {
-//		StringBuilder res = new StringBuilder();
-//		res.append(subject.trace(sm));
-//
-//		int size = selector.compile(sm).size();
-//		System.out.println(size);
-//		if(size >1){
-//			res.append("PUSHI, " + size+"\n");
-//		}
-//		
-////		return  "" + selector.trace(null)+subject.trace(null) ;
-//		return res.toString();
-//	}
 }

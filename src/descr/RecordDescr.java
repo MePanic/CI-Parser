@@ -1,39 +1,41 @@
 package descr;
 
 import java.util.HashMap;
-import scanner.Parser;
+import java.util.Map;
+import java.util.Map.Entry;
 
 public class RecordDescr extends AbstractDescr {
 
 	private static final long serialVersionUID = 1L;
-	SymbolTable recsymbolTable;
 
-	public RecordDescr(int fs, SymbolTable fr) {
+	Map<String, AbstractDescr> recsymbolTable;
+
+	public RecordDescr() {
+		size = 0;
+		recsymbolTable = new HashMap<String, AbstractDescr>();
+	}
+
+	public RecordDescr(int fs, Map<String, AbstractDescr> fr) {
 		size = fs;
 		recsymbolTable = fr;
 	}
-	
-	public int size(){
-		return this.size;
-	}
-	
-	public String toString(int lev){
-		//RecordDescr: size: 27 level: 0
-		StringBuilder sb = new StringBuilder();
-		sb.append(toString(lev,"RecordDescr: size: "+size+" level: "+0 + "\n"));
-		lev++;
-	
-		for(String a : recsymbolTable.getAllAbstractDescrs().keySet()){
-			sb.append(recsymbolTable.AbstractDescrFor(a).toString(lev));
-		}
-		
-	
-		return sb.toString();
+
+	public void setRecSymbolTable(Map<String, AbstractDescr> fr) {
+		recsymbolTable = fr;
 	}
 
+	public Map<String, AbstractDescr> getRecsymbolTable() {
+		return recsymbolTable;
+	}
+	
 	@Override
-	public void set(AbstractDescr descr) {
-		// TODO Auto-generated method stub
-		
+	public String toString(int indent) {
+		StringBuilder sb = new StringBuilder();
+		sb.append(toString(indent, "RecordDescr(size: " + size + ", level: " + level + ")\n"));
+		for (Entry<String, AbstractDescr> entry: recsymbolTable.entrySet()) {
+			sb.append(toString(indent, entry.getKey() + ":"));
+			sb.append(entry.getValue().toString(indent));
+		}
+		return sb.toString();
 	}
 }

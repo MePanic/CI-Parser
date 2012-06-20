@@ -1,39 +1,42 @@
 package descr;
 
 public class VarDescr extends AbstractDescr {
-
+	
 	private static final long serialVersionUID = 1L;
-	int addr;
-	boolean isvarpar;
+	
 	AbstractDescr type;
-	String name;
+	int address;
+	boolean isVar;
 	
-	public VarDescr(int fa, String name, AbstractDescr ftype){
-		isvarpar = false; addr = fa; type = ftype; this.name = name;
+	public VarDescr(int level, int address, AbstractDescr type, boolean isVar) {
+		super(type.getSize(), level);
+		this.type = type;
+		this.address = address;
+		this.isVar = isVar;
+	}
+
+	public boolean isVar() {
+		return isVar;
+	}
+	
+	public int getAddress() {
+		return address;
+	}
+
+	public void setAddress(int address) {
+		this.address = address;
+	}
+
+	public AbstractDescr getType() {
+		return type;
+	}
+
+	public void setType(AbstractDescr type) {
+		this.type = type;
 	}
 
 	@Override
-	public int size() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public String toString(int lev) {
-		// VarDescr: 0 level: 0
-		StringBuilder sb = new StringBuilder();
-		sb.append(toString(lev,name+"\n"));
-		sb.append(toString(lev,"VarDescr: "+addr+" level: "+0 + "\n"));
-		lev++;
-	
-		sb.append(type.toString(lev));
-	
-		return sb.toString();
-	}
-
-	@Override
-	public void set(AbstractDescr descr) {
-		// TODO Auto-generated method stub
-		
+	public String toString(int indent) {
+		return toString(indent, "VarDescr(address: " + address + ", size: " + size + ", level: " + level + ", isVar: " + isVar + ")\n");
 	}
 }

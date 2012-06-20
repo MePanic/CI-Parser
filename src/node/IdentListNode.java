@@ -1,9 +1,12 @@
 package node;
 
 import java.util.List;
+import java.util.Map;
 
 import descr.AbstractDescr;
-import descr.SymbolTable;
+import descr.VarDescr;
+
+import static compiler.Compiler.*;
 
 public class IdentListNode extends AbstractNode {
 
@@ -15,6 +18,17 @@ public class IdentListNode extends AbstractNode {
     	this.idents = idents;
     }
     
+    public List<IdentNode> getIdents() {
+		return idents;
+	}
+    
+	@Override
+	public AbstractDescr compile(Map<Integer, Map<String, AbstractDescr>> symbolTable, AbstractDescr descr) {
+		for (IdentNode ident : idents)
+    		declareDescr(level, ident.getIdent(), new VarDescr(level, address, descr, false), symbolTable);
+    	return null;
+	}
+    
     @Override
     public String toString(int indent) {
         StringBuilder sb = new StringBuilder();
@@ -25,32 +39,4 @@ public class IdentListNode extends AbstractNode {
         }
         return sb.toString();
     }
-    
-    @Override
-	public AbstractDescr compile(SymbolTable sm, AbstractNode type) {
-
-    	for(AbstractNode node : idents){
-//    		System.out.println(type);
-    		sm.declareVar(node.name(),	type.compile(sm));
-    	}
-		return null;
-	}
-
-	@Override
-	public AbstractDescr compile(SymbolTable sm) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public String name() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public int getVal() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
 }
